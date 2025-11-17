@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsPage</class>
+ <widget class="QWidget" name="SettingsPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>⚙️ 설정</string>
+     </property>
+     <property name="styleSheet">
+      <string>font-size: 24px;
+font-weight: bold;
+color: #2196F3;
+padding: 20px;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="infoBox">
+     <property name="title">
+      <string>안내</string>
+     </property>
+     <property name="styleSheet">
+      <string>QGroupBox {
+   font-size: 14px;
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   margin-top: 10px;
+   padding: 20px;
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="infoLayout">
+      <item>
+       <widget class="QLabel" name="infoLabel">
+        <property name="text">
+         <string>설정 페이지는 추후 구현 예정입니다.
+
+구현 예정 기능:
+- 프로필 설정
+- 알림 설정
+- 테마 변경
+- 카테고리 관리</string>
+        </property>
+        <property name="styleSheet">
+         <string>font-size: 13px; line-height: 1.6;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

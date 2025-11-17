@@ -10,21 +10,271 @@
     <height>600</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>22</height>
-    </rect>
-   </property>
+  <property name="windowTitle">
+   <string>DailyFlow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QWidget" name="topBar" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget { background-color: #2196F3; padding: 10px; }</string>
+      </property>
+      <layout class="QHBoxLayout" name="topLayout">
+       <item>
+        <widget class="QLabel" name="titleLabel">
+         <property name="text">
+          <string>DailyFlow</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { color: white; font-size: 20px; font-weight: bold; }</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="userLabel">
+         <property name="text">
+          <string>사용자님</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { color: white; font-size: 14px; margin-right: 10px; }</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="logoutButton">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+   background-color: #f44336;
+   color: white;
+   border: none;
+   padding: 8px 16px;
+   border-radius: 4px;
+   font-weight: bold;
+}
+QPushButton:hover {
+   background-color: #da190b;
+}
+QPushButton:pressed {
+   background-color: #b71c1c;
+}</string>
+         </property>
+         <property name="text">
+          <string>로그아웃</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="navigationBar" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>70</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>70</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget { background-color: #f5f5f5; border-top: 1px solid #ddd; }</string>
+      </property>
+      <layout class="QHBoxLayout" name="navLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="homeButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+   border: none;
+   background-color: transparent;
+   color: #666;
+   font-size: 14px;
+   padding: 10px;
+}
+QPushButton:hover {
+   background-color: #e0e0e0;
+}
+QPushButton:checked {
+   background-color: #2196F3;
+   color: white;
+   font-weight: bold;
+}</string>
+         </property>
+         <property name="text">
+          <string>🏠
+홈</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="scheduleButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+   border: none;
+   background-color: transparent;
+   color: #666;
+   font-size: 14px;
+   padding: 10px;
+}
+QPushButton:hover {
+   background-color: #e0e0e0;
+}
+QPushButton:checked {
+   background-color: #2196F3;
+   color: white;
+   font-weight: bold;
+}</string>
+         </property>
+         <property name="text">
+          <string>📅
+일정</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="settingsButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+   border: none;
+   background-color: transparent;
+   color: #666;
+   font-size: 14px;
+   padding: 10px;
+}
+QPushButton:hover {
+   background-color: #e0e0e0;
+}
+QPushButton:checked {
+   background-color: #2196F3;
+   color: white;
+   font-weight: bold;
+}</string>
+         </property>
+         <property name="text">
+          <string>⚙️
+설정</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

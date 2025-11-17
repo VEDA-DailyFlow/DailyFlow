@@ -3,21 +3,37 @@
 
 #include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
-QT_END_NAMESPACE
+
+class HomePage;
+class SchedulePage;
+class SettingsPage;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(const QString &userId, QWidget *parent = nullptr);
     ~MainWindow();
+
+private slots:
+    void showHomePage();
+    void showSchedulePage();
+    void showSettingsPage();
+    void handleLogout();
 
 private:
     Ui::MainWindow *ui;
+    QString m_userId;
+    QString m_userName;
+
+    // 페이지들
+    HomePage *m_homePage;
+    SchedulePage *m_schedulePage;
+    SettingsPage *m_settingsPage;
 };
+
 #endif // MAINWINDOW_H
