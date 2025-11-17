@@ -23,6 +23,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(DailyFlow
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        homepage.h homepage.cpp
+        schedulepage.h schedulepage.cpp
+        settingspage.h settingspage.cpp
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET DailyFlow APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
