@@ -3,16 +3,15 @@
 
 #include <QWidget>
 #include <QCalendarWidget>
-#include <QListWidget>
-#include <QPushButton>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QPainter>
 #include <QTextCharFormat>
 #include <QTableView>
 #include <QHeaderView>
 #include <QWheelEvent>
+
+namespace Ui {
+class SchedulePage;
+}
 
 // 커스텀 캘린더 위젯
 class CustomCalendar : public QCalendarWidget
@@ -34,7 +33,7 @@ public slots:
 protected:
     void paintCell(QPainter *painter, const QRect &rect, QDate date) const override;
     void showEvent(QShowEvent *event) override;
-    void wheelEvent(QWheelEvent *event) override; // 추가
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     void updateVisibleRows();
@@ -47,6 +46,7 @@ class SchedulePage : public QWidget
 
 public:
     explicit SchedulePage(const QString &userId, QWidget *parent = nullptr);
+    ~SchedulePage();
 
 private slots:
     void onDateSelected(const QDate &date);
@@ -55,20 +55,15 @@ private slots:
     void onDeleteSchedule();
 
 private:
-    void setupUI();
     void loadSchedulesForDate(const QDate &date);
     void updateCalendarSchedules();
 
+    Ui::SchedulePage *ui;
     QString m_userId;
     QDate m_selectedDate;
 
-    // UI 컴포넌트
+    // CustomCalendar는 UI 파일에 없으므로 직접 관리
     CustomCalendar *m_calendar;
-    QLabel *m_dateLabel;
-    QListWidget *m_scheduleList;
-    QPushButton *m_addButton;
-    QPushButton *m_editButton;
-    QPushButton *m_deleteButton;
 
     // 임시 데이터 저장 (실제로는 DataManager 사용)
     QMap<QDate, QStringList> m_scheduleData;

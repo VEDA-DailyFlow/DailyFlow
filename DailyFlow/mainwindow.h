@@ -2,11 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QStackedWidget>
-#include <QPushButton>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+
+namespace Ui {
+class MainWindow;
+}
 
 class HomePage;
 class SchedulePage;
@@ -27,34 +26,14 @@ private slots:
     void handleLogout();
 
 private:
-    void setupUI();
-    void setupTopBar();
-    void setupNavigationBar();
-
+    Ui::MainWindow *ui;
     QString m_userId;
     QString m_userName;
 
-    // UI 컴포넌트
-    QWidget *m_centralWidget;
-    QVBoxLayout *m_mainLayout;
-
-    // 상단바
-    QWidget *m_topBar;
-    QLabel *m_titleLabel;
-    QLabel *m_userLabel;
-    QPushButton *m_logoutButton;
-
-    // 메인 컨텐츠
-    QStackedWidget *m_stackedWidget;
+    // 페이지들
     HomePage *m_homePage;
     SchedulePage *m_schedulePage;
     SettingsPage *m_settingsPage;
-
-    // 하단 네비게이션
-    QWidget *m_navigationBar;
-    QPushButton *m_homeButton;
-    QPushButton *m_scheduleButton;
-    QPushButton *m_settingsButton;
 };
 
 #endif // MAINWINDOW_H

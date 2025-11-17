@@ -2,8 +2,10 @@
 #define SETTINGSPAGE_H
 
 #include <QWidget>
-#include <QLabel>
-#include <QVBoxLayout>
+
+namespace Ui {
+class SettingsPage;
+}
 
 class SettingsPage : public QWidget
 {
@@ -11,10 +13,10 @@ class SettingsPage : public QWidget
 
 public:
     explicit SettingsPage(const QString &userId, QWidget *parent = nullptr);
+    ~SettingsPage();
 
 private:
-    void setupUI();
-
+    Ui::SettingsPage *ui;
     QString m_userId;
 };
 
