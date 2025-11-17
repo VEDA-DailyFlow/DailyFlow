@@ -2,6 +2,7 @@
 #include "envloader.h"
 #include "logindialog.h"
 #include "joindialog.h"
+#include "datamanager.h"
 
 #include <QApplication>
 
@@ -17,6 +18,9 @@ int main(int argc, char *argv[])
     // LoginDialog-----------------------------------
     // LoginDialog login;
     // login.show();
+
+    // DataManager-----------------------------------
+    DataManager dataManager;
 
     // JoinDialog------------------------------------
     // JoinDialog join;
