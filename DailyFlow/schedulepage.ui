@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SchedulePage</class>
+ <widget class="QWidget" name="SchedulePage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>20</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="calendarBox">
+     <property name="title">
+      <string>📅 캘린더</string>
+     </property>
+     <property name="styleSheet">
+      <string>QGroupBox {
+   font-size: 16px;
+   font-weight: bold;
+   color: #333;
+   border: 2px solid #2196F3;
+   border-radius: 8px;
+   margin-top: 10px;
+   padding-top: 15px;
+   background-color: white;
+}
+QGroupBox::title {
+   subcontrol-origin: margin;
+   left: 15px;
+   padding: 0 5px;
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="calendarBoxLayout">
+      <property name="spacing">
+       <number>15</number>
+      </property>
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>25</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>20</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="legendLayout">
+        <property name="spacing">
+         <number>30</number>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
+        </property>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="legendLabel">
+          <property name="text">
+           <string>● 일정 있음</string>
+          </property>
+          <property name="styleSheet">
+           <string>color: #2196F3; 
+font-size: 13px; 
+font-weight: normal; 
+padding: 5px 10px;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="todayLabel">
+          <property name="text">
+           <string>● 오늘</string>
+          </property>
+          <property name="styleSheet">
+           <string>color: #4CAF50; 
+font-size: 13px; 
+font-weight: normal; 
+padding: 5px 10px;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="widgetResizable">
+         <bool>false</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="styleSheet">
+         <string>QScrollArea {
+   border: none;
+   background-color: white;
+}
+QScrollBar:vertical {
+   border: none;
+   background: #f0f0f0;
+   width: 10px;
+   margin: 0;
+}
+QScrollBar::handle:vertical {
+   background: #2196F3;
+   border-radius: 5px;
+   min-height: 20px;
+}
+QScrollBar::handle:vertical:hover {
+   background: #1976D2;
+}
+QScrollBar:horizontal {
+   border: none;
+   background: #f0f0f0;
+   height: 10px;
+   margin: 0;
+}
+QScrollBar::handle:horizontal {
+   background: #2196F3;
+   border-radius: 5px;
+   min-width: 20px;
+}
+QScrollBar::handle:horizontal:hover {
+   background: #1976D2;
+}
+QScrollBar::add-line, QScrollBar::sub-line {
+   border: none;
+   background: none;
+}</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="scheduleBox">
+     <property name="title">
+      <string/>
+     </property>
+     <property name="styleSheet">
+      <string>QGroupBox {
+   border: 2px solid #e0e0e0;
+   border-radius: 8px;
+   margin-top: 5px;
+   padding-top: 10px;
+   background-color: white;
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="scheduleLayout">
+      <property name="spacing">
+       <number>15</number>
+      </property>
+      <property name="leftMargin">
+       <number>15</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>15</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="dateLabel">
+        <property name="text">
+         <string>📆 날짜</string>
+        </property>
+        <property name="styleSheet">
+         <string>font-size: 16px; 
+font-weight: bold; 
+color: #2196F3; 
+padding: 8px; 
+background-color: #e3f2fd; 
+border-radius: 4px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="scheduleList">
+        <property name="styleSheet">
+         <string>QListWidget {
+   border: 1px solid #e0e0e0;
+   border-radius: 4px;
+   background-color: #fafafa;
+   padding: 5px;
+}
+QListWidget::item {
+   padding: 12px;
+   margin: 4px;
+   border-radius: 4px;
+   background-color: white;
+   border-left: 4px solid #2196F3;
+}
+QListWidget::item:selected {
+   background-color: #e3f2fd;
+   color: #1976D2;
+   border-left: 4px solid #1976D2;
+}
+QListWidget::item:hover {
+   background-color: #f5f5f5;
+}</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="buttonLayout">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="addButton">
+          <property name="text">
+           <string>➕ 일정 추가</string>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton {
+   background-color: #2196F3;
+   color: white;
+   border: none;
+   padding: 12px 24px;
+   border-radius: 6px;
+   font-weight: bold;
+   font-size: 14px;
+}
+QPushButton:hover {
+   background-color: #1976D2;
+}
+QPushButton:pressed {
+   background-color: #1565C0;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="editButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>✏️ 수정</string>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton {
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   padding: 12px 24px;
+   border-radius: 6px;
+   font-weight: bold;
+}
+QPushButton:hover:enabled {
+   background-color: #45a049;
+}
+QPushButton:pressed:enabled {
+   background-color: #3d8b40;
+}
+QPushButton:disabled {
+   background-color: #cccccc;
+   color: #888;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deleteButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>🗑️ 삭제</string>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton {
+   background-color: #f44336;
+   color: white;
+   border: none;
+   padding: 12px 24px;
+   border-radius: 6px;
+   font-weight: bold;
+}
+QPushButton:hover:enabled {
+   background-color: #da190b;
+}
+QPushButton:pressed:enabled {
+   background-color: #c41c0c;
+}
+QPushButton:disabled {
+   background-color: #cccccc;
+   color: #888;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

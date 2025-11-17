@@ -1,5 +1,5 @@
 #include "schedulepage.h"
-#include <QGroupBox>
+#include "ui_schedulepage.h"
 #include <QMessageBox>
 #include <QScrollArea>
 
@@ -10,36 +10,32 @@
 CustomCalendar::CustomCalendar(QWidget *parent)
     : QCalendarWidget(parent)
 {
-    setGridVisible(false); // 그리드 숨김
+    setGridVisible(false);
     setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
 
-    // 헤더 포맷 설정 (요일)
     QTextCharFormat headerFormat;
     headerFormat.setForeground(QBrush(QColor("#333333")));
     headerFormat.setFontWeight(QFont::Bold);
-    headerFormat.setFontPointSize(12); // 14 -> 12
+    headerFormat.setFontPointSize(12);
     setHeaderTextFormat(headerFormat);
 
-    // 주말 포맷 설정
     QTextCharFormat weekendFormat;
     weekendFormat.setForeground(QBrush(QColor("#f44336")));
     weekendFormat.setFontWeight(QFont::Bold);
-    weekendFormat.setFontPointSize(12); // 14 -> 12
+    weekendFormat.setFontPointSize(12);
     setWeekdayTextFormat(Qt::Saturday, weekendFormat);
     setWeekdayTextFormat(Qt::Sunday, weekendFormat);
 
-    // 평일 포맷 설정
     QTextCharFormat weekdayFormat;
     weekdayFormat.setForeground(QBrush(QColor("#333333")));
     weekdayFormat.setFontWeight(QFont::Bold);
-    weekdayFormat.setFontPointSize(12); // 14 -> 12
+    weekdayFormat.setFontPointSize(12);
     setWeekdayTextFormat(Qt::Monday, weekdayFormat);
     setWeekdayTextFormat(Qt::Tuesday, weekdayFormat);
     setWeekdayTextFormat(Qt::Wednesday, weekdayFormat);
     setWeekdayTextFormat(Qt::Thursday, weekdayFormat);
     setWeekdayTextFormat(Qt::Friday, weekdayFormat);
 
-    // 스타일시트
     setStyleSheet(
         "QCalendarWidget QWidget { "
         "   background-color: white; "
@@ -98,10 +94,8 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "}"
         );
 
-    // 고정 크기 설정 (700x450 -> 560x360)
     setFixedSize(560, 360);
 
-    // 페이지 변경 시 행 업데이트
     connect(this, &QCalendarWidget::currentPageChanged,
             this, &CustomCalendar::onPageChanged);
 }
@@ -142,21 +136,17 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
     bool isCurrentMonth = (date.month() == monthShown() && date.year() == yearShown());
 
     if (!isCurrentMonth) {
-        // 다른 달의 날짜는 아예 표시하지 않음
         painter->fillRect(rect, QColor("#ffffff"));
         return;
     }
 
-    // 현재 달의 날짜만 표시
     painter->fillRect(rect, QColor("#ffffff"));
 
-    // 선택된 날짜 배경
     bool isSelected = (date == selectedDate());
     if (isSelected) {
         painter->fillRect(rect, QColor("#2196F3"));
     }
 
-    // 오늘 날짜 배경 (선택되지 않은 경우)
     if (date == QDate::currentDate() && !isSelected) {
         painter->save();
         painter->setPen(QPen(QColor("#4CAF50"), 2));
@@ -165,7 +155,6 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
         painter->restore();
     }
 
-    // 날짜 텍스트
     QColor textColor;
     if (isSelected) {
         textColor = QColor("#FFFFFF");
@@ -177,22 +166,21 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
 
     painter->setPen(textColor);
     QFont font = painter->font();
-    font.setPointSize(13); // 15 -> 13
+    font.setPointSize(13);
     font.setBold(true);
     painter->setFont(font);
     painter->drawText(rect, Qt::AlignCenter, QString::number(date.day()));
 
-    // 일정 표시 점
     if (m_scheduleCounts.contains(date)) {
         painter->save();
 
         int scheduleCount = m_scheduleCounts[date];
-        int dotSize = 5; // 6 -> 5
-        int spacing = 2; // 3 -> 2
+        int dotSize = 5;
+        int spacing = 2;
         int dotsToShow = qMin(scheduleCount, 3);
         int totalWidth = dotsToShow * dotSize + (dotsToShow - 1) * spacing;
         int startX = rect.center().x() - totalWidth / 2;
-        int dotY = rect.bottom() - 10; // 12 -> 10
+        int dotY = rect.bottom() - 10;
 
         painter->setRenderHint(QPainter::Antialiasing);
 
@@ -226,7 +214,6 @@ void CustomCalendar::showEvent(QShowEvent *event)
 
 void CustomCalendar::wheelEvent(QWheelEvent *event)
 {
-    // 스크롤로 월 넘기기 비활성화
     event->ignore();
 }
 
@@ -237,28 +224,29 @@ void CustomCalendar::updateVisibleRows()
         return;
     }
 
-    // 셀 크기만 고정
     tableView->verticalHeader()->setDefaultSectionSize(52);
     tableView->horizontalHeader()->setDefaultSectionSize(76);
 
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
-    // 행 숨김 로직 완전 제거 - 모든 행 표시
     for (int row = 0; row < 6; ++row) {
         tableView->setRowHidden(row, false);
     }
 }
 
 // ============================================================================
-// SchedulePage 구현
+// SchedulePage 구현 (UI 파일 사용으로 대폭 간소화)
 // ============================================================================
 
 SchedulePage::SchedulePage(const QString &userId, QWidget *parent)
     : QWidget(parent)
+    , ui(new Ui::SchedulePage)
     , m_userId(userId)
     , m_selectedDate(QDate::currentDate())
 {
+    ui->setupUi(this);
+
     // 테스트 데이터
     m_scheduleData[QDate::currentDate().addDays(3)] =
         QStringList() << "14:00 - 16:00 한화비전 미팅";
@@ -268,115 +256,7 @@ SchedulePage::SchedulePage(const QString &userId, QWidget *parent)
     m_scheduleData[QDate::currentDate()] =
         QStringList() << "09:00 - 10:00 데일리 스탠드업";
 
-    setupUI();
-    updateCalendarSchedules();
-    loadSchedulesForDate(m_selectedDate);
-}
-
-void SchedulePage::setupUI()
-{
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
-    mainLayout->setSpacing(20);
-
-    // 캘린더 섹션
-    QGroupBox *calendarBox = new QGroupBox("📅 캘린더", this);
-    calendarBox->setStyleSheet(
-        "QGroupBox {"
-        "   font-size: 16px;"
-        "   font-weight: bold;"
-        "   color: #333;"
-        "   border: 2px solid #2196F3;"
-        "   border-radius: 8px;"
-        "   margin-top: 10px;"
-        "   padding-top: 15px;"
-        "   background-color: white;"
-        "}"
-        "QGroupBox::title {"
-        "   subcontrol-origin: margin;"
-        "   left: 15px;"
-        "   padding: 0 5px;"
-        "}"
-        );
-
-    QVBoxLayout *calendarBoxLayout = new QVBoxLayout(calendarBox);
-    calendarBoxLayout->setContentsMargins(20, 25, 20, 20);
-    calendarBoxLayout->setSpacing(15);
-
-    // 범례
-    QHBoxLayout *legendLayout = new QHBoxLayout();
-    legendLayout->setSpacing(30);
-    legendLayout->setContentsMargins(0, 0, 0, 15);
-
-    QLabel *legendLabel = new QLabel("● 일정 있음", this);
-    legendLabel->setStyleSheet(
-        "color: #2196F3; "
-        "font-size: 13px; "
-        "font-weight: normal; "
-        "padding: 5px 10px;"
-        );
-
-    QLabel *todayLabel = new QLabel("● 오늘", this);
-    todayLabel->setStyleSheet(
-        "color: #4CAF50; "
-        "font-size: 13px; "
-        "font-weight: normal; "
-        "padding: 5px 10px;"
-        );
-
-    legendLayout->addStretch();
-    legendLayout->addWidget(legendLabel);
-    legendLayout->addWidget(todayLabel);
-    legendLayout->addStretch();
-
-    calendarBoxLayout->addLayout(legendLayout);
-
-    // 스크롤 영역 생성
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(false);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    scrollArea->setAlignment(Qt::AlignCenter);
-    scrollArea->setStyleSheet(
-        "QScrollArea {"
-        "   border: none;"
-        "   background-color: white;"
-        "}"
-        "QScrollBar:vertical {"
-        "   border: none;"
-        "   background: #f0f0f0;"
-        "   width: 10px;"
-        "   margin: 0;"
-        "}"
-        "QScrollBar::handle:vertical {"
-        "   background: #2196F3;"
-        "   border-radius: 5px;"
-        "   min-height: 20px;"
-        "}"
-        "QScrollBar::handle:vertical:hover {"
-        "   background: #1976D2;"
-        "}"
-        "QScrollBar:horizontal {"
-        "   border: none;"
-        "   background: #f0f0f0;"
-        "   height: 10px;"
-        "   margin: 0;"
-        "}"
-        "QScrollBar::handle:horizontal {"
-        "   background: #2196F3;"
-        "   border-radius: 5px;"
-        "   min-width: 20px;"
-        "}"
-        "QScrollBar::handle:horizontal:hover {"
-        "   background: #1976D2;"
-        "}"
-        "QScrollBar::add-line, QScrollBar::sub-line {"
-        "   border: none;"
-        "   background: none;"
-        "}"
-        );
-
-    // 캘린더를 중앙에 배치할 컨테이너 위젯
+    // CustomCalendar 생성 및 ScrollArea에 추가
     QWidget *calendarContainer = new QWidget();
     QHBoxLayout *centerLayout = new QHBoxLayout(calendarContainer);
     centerLayout->setContentsMargins(0, 0, 0, 0);
@@ -389,152 +269,27 @@ void SchedulePage::setupUI()
     centerLayout->addWidget(m_calendar);
     centerLayout->addStretch();
 
-    scrollArea->setWidget(m_calendar);
-    calendarBoxLayout->addWidget(scrollArea);
+    ui->scrollArea->setWidget(calendarContainer);
 
-    mainLayout->addWidget(calendarBox);
-
-    // 일정 목록 섹션
-    QGroupBox *scheduleBox = new QGroupBox("", this);
-    scheduleBox->setStyleSheet(
-        "QGroupBox {"
-        "   border: 2px solid #e0e0e0;"
-        "   border-radius: 8px;"
-        "   margin-top: 5px;"
-        "   padding-top: 10px;"
-        "   background-color: white;"
-        "}"
-        );
-
-    QVBoxLayout *scheduleLayout = new QVBoxLayout(scheduleBox);
-    scheduleLayout->setContentsMargins(15, 15, 15, 15);
-
-    // 선택된 날짜 표시
-    m_dateLabel = new QLabel(this);
-    m_dateLabel->setStyleSheet(
-        "font-size: 16px; "
-        "font-weight: bold; "
-        "color: #2196F3; "
-        "padding: 8px; "
-        "background-color: #e3f2fd; "
-        "border-radius: 4px;"
-        );
-    m_dateLabel->setText("📆 " + m_selectedDate.toString("yyyy년 M월 d일 (ddd)"));
-    scheduleLayout->addWidget(m_dateLabel);
-
-    // 일정 리스트
-    m_scheduleList = new QListWidget(this);
-    m_scheduleList->setStyleSheet(
-        "QListWidget {"
-        "   border: 1px solid #e0e0e0;"
-        "   border-radius: 4px;"
-        "   background-color: #fafafa;"
-        "   padding: 5px;"
-        "}"
-        "QListWidget::item {"
-        "   padding: 12px;"
-        "   margin: 4px;"
-        "   border-radius: 4px;"
-        "   background-color: white;"
-        "   border-left: 4px solid #2196F3;"
-        "}"
-        "QListWidget::item:selected {"
-        "   background-color: #e3f2fd;"
-        "   color: #1976D2;"
-        "   border-left: 4px solid #1976D2;"
-        "}"
-        "QListWidget::item:hover {"
-        "   background-color: #f5f5f5;"
-        "}"
-        );
-    scheduleLayout->addWidget(m_scheduleList);
-
-    // 버튼 레이아웃
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->setSpacing(10);
-
-    m_addButton = new QPushButton("➕ 일정 추가", this);
-    m_addButton->setStyleSheet(
-        "QPushButton {"
-        "   background-color: #2196F3;"
-        "   color: white;"
-        "   border: none;"
-        "   padding: 12px 24px;"
-        "   border-radius: 6px;"
-        "   font-weight: bold;"
-        "   font-size: 14px;"
-        "}"
-        "QPushButton:hover {"
-        "   background-color: #1976D2;"
-        "}"
-        "QPushButton:pressed {"
-        "   background-color: #1565C0;"
-        "}"
-        );
-    connect(m_addButton, &QPushButton::clicked, this, &SchedulePage::onAddSchedule);
-
-    m_editButton = new QPushButton("✏️ 수정", this);
-    m_editButton->setEnabled(false);
-    m_editButton->setStyleSheet(
-        "QPushButton {"
-        "   background-color: #4CAF50;"
-        "   color: white;"
-        "   border: none;"
-        "   padding: 12px 24px;"
-        "   border-radius: 6px;"
-        "   font-weight: bold;"
-        "}"
-        "QPushButton:hover:enabled {"
-        "   background-color: #45a049;"
-        "}"
-        "QPushButton:pressed:enabled {"
-        "   background-color: #3d8b40;"
-        "}"
-        "QPushButton:disabled {"
-        "   background-color: #cccccc;"
-        "   color: #888;"
-        "}"
-        );
-    connect(m_editButton, &QPushButton::clicked, this, &SchedulePage::onEditSchedule);
-
-    m_deleteButton = new QPushButton("🗑️ 삭제", this);
-    m_deleteButton->setEnabled(false);
-    m_deleteButton->setStyleSheet(
-        "QPushButton {"
-        "   background-color: #f44336;"
-        "   color: white;"
-        "   border: none;"
-        "   padding: 12px 24px;"
-        "   border-radius: 6px;"
-        "   font-weight: bold;"
-        "}"
-        "QPushButton:hover:enabled {"
-        "   background-color: #da190b;"
-        "}"
-        "QPushButton:pressed:enabled {"
-        "   background-color: #c41c0c;"
-        "}"
-        "QPushButton:disabled {"
-        "   background-color: #cccccc;"
-        "   color: #888;"
-        "}"
-        );
-    connect(m_deleteButton, &QPushButton::clicked, this, &SchedulePage::onDeleteSchedule);
-
-    buttonLayout->addWidget(m_addButton);
-    buttonLayout->addWidget(m_editButton);
-    buttonLayout->addWidget(m_deleteButton);
-    buttonLayout->addStretch();
-
-    scheduleLayout->addLayout(buttonLayout);
-    mainLayout->addWidget(scheduleBox, 1);
+    // 버튼 시그널 연결
+    connect(ui->addButton, &QPushButton::clicked, this, &SchedulePage::onAddSchedule);
+    connect(ui->editButton, &QPushButton::clicked, this, &SchedulePage::onEditSchedule);
+    connect(ui->deleteButton, &QPushButton::clicked, this, &SchedulePage::onDeleteSchedule);
 
     // 일정 선택 시 버튼 활성화
-    connect(m_scheduleList, &QListWidget::itemSelectionChanged, this, [this]() {
-        bool hasSelection = m_scheduleList->currentItem() != nullptr;
-        m_editButton->setEnabled(hasSelection);
-        m_deleteButton->setEnabled(hasSelection);
+    connect(ui->scheduleList, &QListWidget::itemSelectionChanged, this, [this]() {
+        bool hasSelection = ui->scheduleList->currentItem() != nullptr;
+        ui->editButton->setEnabled(hasSelection);
+        ui->deleteButton->setEnabled(hasSelection);
     });
+
+    updateCalendarSchedules();
+    loadSchedulesForDate(m_selectedDate);
+}
+
+SchedulePage::~SchedulePage()
+{
+    delete ui;
 }
 
 void SchedulePage::onDateSelected(const QDate &date)
@@ -549,27 +304,27 @@ void SchedulePage::onDateSelected(const QDate &date)
     if (date == QDate::currentDate()) {
         dateText += " [오늘]";
     }
-    m_dateLabel->setText(dateText);
+    ui->dateLabel->setText(dateText);
 
     loadSchedulesForDate(date);
 }
 
 void SchedulePage::loadSchedulesForDate(const QDate &date)
 {
-    m_scheduleList->clear();
+    ui->scheduleList->clear();
 
     if (m_scheduleData.contains(date)) {
         const QStringList &schedules = m_scheduleData[date];
         for (const QString &schedule : schedules) {
-            m_scheduleList->addItem(schedule);
+            ui->scheduleList->addItem(schedule);
         }
     }
 
-    if (m_scheduleList->count() == 0) {
+    if (ui->scheduleList->count() == 0) {
         QListWidgetItem *emptyItem = new QListWidgetItem("일정이 없습니다.");
         emptyItem->setFlags(emptyItem->flags() & ~Qt::ItemIsSelectable);
         emptyItem->setForeground(QColor("#999"));
-        m_scheduleList->addItem(emptyItem);
+        ui->scheduleList->addItem(emptyItem);
     }
 }
 
@@ -592,7 +347,7 @@ void SchedulePage::onAddSchedule()
 
 void SchedulePage::onEditSchedule()
 {
-    if (!m_scheduleList->currentItem()) {
+    if (!ui->scheduleList->currentItem()) {
         return;
     }
 
@@ -602,8 +357,8 @@ void SchedulePage::onEditSchedule()
 
 void SchedulePage::onDeleteSchedule()
 {
-    if (!m_scheduleList->currentItem() ||
-        m_scheduleList->currentItem()->text() == "일정이 없습니다.") {
+    if (!ui->scheduleList->currentItem() ||
+        ui->scheduleList->currentItem()->text() == "일정이 없습니다.") {
         return;
     }
 
@@ -613,7 +368,7 @@ void SchedulePage::onDeleteSchedule()
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        QString scheduleText = m_scheduleList->currentItem()->text();
+        QString scheduleText = ui->scheduleList->currentItem()->text();
         if (m_scheduleData.contains(m_selectedDate)) {
             m_scheduleData[m_selectedDate].removeOne(scheduleText);
             if (m_scheduleData[m_selectedDate].isEmpty()) {
