@@ -1,4 +1,6 @@
 #include "aiservice.h"
+#include "envloader.h"
+#include <QDebug>
 
 AIService& AIService::instance(){
     static AIService instance;
@@ -6,8 +8,16 @@ AIService& AIService::instance(){
 }
 
 AIService::AIService(){
-    openai_apikey = "";
-    weather_apikey = "";
+    openai_apikey = EnvLoader::get("OPENAI_API_KEY");
+    weather_apikey = EnvLoader::get("WEATHER_API_KEY");
+
+    if(openai_apikey.isEmpty()){
+        qCritical() << "OPENAI_API_KEY is not set!";
+    }
+
+    if(weather_apikey.isEmpty()){
+        qCritical() << "WEATHER_API_KEY is not set!";
+    }
 }
 
 AIService::~AIService(){
