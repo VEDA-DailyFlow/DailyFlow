@@ -27,6 +27,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         logindialog.h logindialog.cpp logindialog.ui
         joindialog.h joindialog.cpp joindialog.ui
         datamanager.h datamanager.cpp
+        homepage.h homepage.cpp
+        schedulepage.h schedulepage.cpp
+        settingspage.h settingspage.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

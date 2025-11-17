@@ -81,7 +81,8 @@ desktop.ini
 # data/*.json
 
 # 실행 파일
-DailyFlow
+/DailyFlow
+!/DailyFlow/
 DailyFlow.app/
 
 # 테스트 파일
