@@ -21,7 +21,6 @@ class CustomCalendar : public QCalendarWidget
 public:
     explicit CustomCalendar(QWidget *parent = nullptr);
 
-    // 특정 날짜에 일정이 있는지 설정
     void setScheduleDates(const QMap<QDate, int> &scheduleCounts);
     void addScheduleDate(const QDate &date, int count = 1);
     void removeScheduleDate(const QDate &date);
@@ -37,7 +36,7 @@ protected:
 
 private:
     void updateVisibleRows();
-    QMap<QDate, int> m_scheduleCounts; // 날짜별 일정 개수
+    QMap<QDate, int> m_scheduleCounts;
 };
 
 class SchedulePage : public QWidget
@@ -45,11 +44,12 @@ class SchedulePage : public QWidget
     Q_OBJECT
 
 public:
-    explicit SchedulePage(const QString &userId, QWidget *parent = nullptr);
+    explicit SchedulePage(int userId, QWidget *parent = nullptr);
     ~SchedulePage();
 
 private slots:
     void onDateSelected(const QDate &date);
+    void onMonthChanged(int year, int month);
     void onAddSchedule();
     void onEditSchedule();
     void onDeleteSchedule();
@@ -59,14 +59,9 @@ private:
     void updateCalendarSchedules();
 
     Ui::SchedulePage *ui;
-    QString m_userId;
+    int m_userId;  // QString -> int 변경
     QDate m_selectedDate;
-
-    // CustomCalendar는 UI 파일에 없으므로 직접 관리
     CustomCalendar *m_calendar;
-
-    // 임시 데이터 저장 (실제로는 DataManager 사용)
-    QMap<QDate, QStringList> m_scheduleData;
 };
 
 #endif // SCHEDULEPAGE_H

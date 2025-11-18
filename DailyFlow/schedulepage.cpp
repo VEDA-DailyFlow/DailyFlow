@@ -1,10 +1,12 @@
 #include "schedulepage.h"
 #include "ui_schedulepage.h"
+#include "scheduledialog.h"
+#include "datamanager.h"
 #include <QMessageBox>
 #include <QScrollArea>
 
 // ============================================================================
-// CustomCalendar 구현
+// CustomCalendar 구현 (변경 없음)
 // ============================================================================
 
 CustomCalendar::CustomCalendar(QWidget *parent)
@@ -236,25 +238,16 @@ void CustomCalendar::updateVisibleRows()
 }
 
 // ============================================================================
-// SchedulePage 구현 (UI 파일 사용으로 대폭 간소화)
+// SchedulePage 구현 (DataManager 연동)
 // ============================================================================
 
-SchedulePage::SchedulePage(const QString &userId, QWidget *parent)
+SchedulePage::SchedulePage(int userId, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SchedulePage)
     , m_userId(userId)
     , m_selectedDate(QDate::currentDate())
 {
     ui->setupUi(this);
-
-    // 테스트 데이터
-    m_scheduleData[QDate::currentDate().addDays(3)] =
-        QStringList() << "14:00 - 16:00 한화비전 미팅";
-    m_scheduleData[QDate::currentDate().addDays(4)] =
-        QStringList() << "10:00 - 12:00 VEDA 프로젝트 발표"
-                      << "15:00 - 17:00 팀 회의";
-    m_scheduleData[QDate::currentDate()] =
-        QStringList() << "09:00 - 10:00 데일리 스탠드업";
 
     // CustomCalendar 생성 및 ScrollArea에 추가
     QWidget *calendarContainer = new QWidget();
@@ -265,6 +258,8 @@ SchedulePage::SchedulePage(const QString &userId, QWidget *parent)
     m_calendar = new CustomCalendar(calendarContainer);
     connect(m_calendar, &QCalendarWidget::selectionChanged,
             this, [this]() { onDateSelected(m_calendar->selectedDate()); });
+    connect(m_calendar, &QCalendarWidget::currentPageChanged,
+            this, &SchedulePage::onMonthChanged);
 
     centerLayout->addWidget(m_calendar);
     centerLayout->addStretch();
@@ -278,13 +273,18 @@ SchedulePage::SchedulePage(const QString &userId, QWidget *parent)
 
     // 일정 선택 시 버튼 활성화
     connect(ui->scheduleList, &QListWidget::itemSelectionChanged, this, [this]() {
-        bool hasSelection = ui->scheduleList->currentItem() != nullptr;
+        bool hasSelection = ui->scheduleList->currentItem() != nullptr &&
+                            ui->scheduleList->currentItem()->data(Qt::UserRole).toInt() > 0;
         ui->editButton->setEnabled(hasSelection);
         ui->deleteButton->setEnabled(hasSelection);
     });
 
+    // 초기 데이터 로드
     updateCalendarSchedules();
     loadSchedulesForDate(m_selectedDate);
+
+    // 날짜 라벨 초기화
+    onDateSelected(m_selectedDate);
 }
 
 SchedulePage::~SchedulePage()
@@ -309,31 +309,68 @@ void SchedulePage::onDateSelected(const QDate &date)
     loadSchedulesForDate(date);
 }
 
+void SchedulePage::onMonthChanged(int year, int month)
+{
+    Q_UNUSED(month)
+    Q_UNUSED(year)
+    updateCalendarSchedules();
+}
+
 void SchedulePage::loadSchedulesForDate(const QDate &date)
 {
     ui->scheduleList->clear();
 
-    if (m_scheduleData.contains(date)) {
-        const QStringList &schedules = m_scheduleData[date];
-        for (const QString &schedule : schedules) {
-            ui->scheduleList->addItem(schedule);
-        }
-    }
+    // DataManager에서 해당 날짜의 일정 가져오기
+    QList<QVariantMap> schedules = DataManager::instance().getSchedulesByDate(
+        m_userId,
+        date.toString("yyyy-MM-dd")
+        );
 
-    if (ui->scheduleList->count() == 0) {
+    if (schedules.isEmpty()) {
         QListWidgetItem *emptyItem = new QListWidgetItem("일정이 없습니다.");
         emptyItem->setFlags(emptyItem->flags() & ~Qt::ItemIsSelectable);
         emptyItem->setForeground(QColor("#999"));
+        emptyItem->setData(Qt::UserRole, -1);  // 빈 항목 표시
         ui->scheduleList->addItem(emptyItem);
+    } else {
+        for (const QVariantMap &schedule : schedules) {
+            QString startTime = schedule["start_time"].toString();
+            QString endTime = schedule["end_time"].toString();
+            QString title = schedule["title"].toString();
+            int scheduleId = schedule["id"].toInt();
+
+            QString displayText = QString("%1 - %2 %3")
+                                      .arg(startTime)
+                                      .arg(endTime)
+                                      .arg(title);
+
+            QListWidgetItem *item = new QListWidgetItem(displayText);
+            item->setData(Qt::UserRole, scheduleId);  // ID 저장
+            ui->scheduleList->addItem(item);
+        }
     }
+
+    // 버튼 상태 초기화
+    ui->editButton->setEnabled(false);
+    ui->deleteButton->setEnabled(false);
 }
 
 void SchedulePage::updateCalendarSchedules()
 {
     QMap<QDate, int> scheduleCounts;
 
-    for (auto it = m_scheduleData.begin(); it != m_scheduleData.end(); ++it) {
-        scheduleCounts[it.key()] = it.value().count();
+    // 현재 표시 중인 월의 일정 가져오기
+    int year = m_calendar->yearShown();
+    int month = m_calendar->monthShown();
+
+    QList<QVariantMap> schedules = DataManager::instance().getSchedulesByMonth(
+        m_userId, year, month
+        );
+
+    // 날짜별 일정 개수 계산
+    for (const QVariantMap &schedule : schedules) {
+        QDate date = QDate::fromString(schedule["date"].toString(), "yyyy-MM-dd");
+        scheduleCounts[date]++;
     }
 
     m_calendar->setScheduleDates(scheduleCounts);
@@ -341,44 +378,127 @@ void SchedulePage::updateCalendarSchedules()
 
 void SchedulePage::onAddSchedule()
 {
-    QMessageBox::information(this, "일정 추가",
-                             "일정 추가 기능은 ScheduleDialog 구현 후 사용 가능합니다.");
+    ScheduleDialog dialog(this, m_selectedDate);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QVariantMap data = dialog.getScheduleData();
+
+        bool success = DataManager::instance().addSchedule(
+            m_userId,
+            data["title"].toString(),
+            data["date"].toString(),
+            data["start_time"].toString(),
+            data["end_time"].toString(),
+            data["location"].toString(),
+            data["memo"].toString(),
+            data["category"].toString()
+            );
+
+        if (success) {
+            // AI 요약 무효화
+            DataManager::instance().invalidateSummary(m_userId, data["date"].toString());
+
+            // UI 갱신
+            updateCalendarSchedules();
+            loadSchedulesForDate(m_selectedDate);
+
+            QMessageBox::information(this, "일정 추가", "일정이 성공적으로 추가되었습니다.");
+        } else {
+            QMessageBox::warning(this, "오류", "일정 추가에 실패했습니다.");
+        }
+    }
 }
 
 void SchedulePage::onEditSchedule()
 {
-    if (!ui->scheduleList->currentItem()) {
+    QListWidgetItem *item = ui->scheduleList->currentItem();
+    if (!item) {
         return;
     }
 
-    QMessageBox::information(this, "일정 수정",
-                             "일정 수정 기능은 ScheduleDialog 구현 후 사용 가능합니다.");
+    int scheduleId = item->data(Qt::UserRole).toInt();
+    if (scheduleId <= 0) {
+        return;
+    }
+
+    // 기존 일정 데이터 가져오기
+    QVariantMap scheduleData = DataManager::instance().getScheduleById(scheduleId);
+
+    if (scheduleData.isEmpty()) {
+        QMessageBox::warning(this, "오류", "일정 정보를 불러올 수 없습니다.");
+        return;
+    }
+
+    // 수정 Dialog 열기
+    ScheduleDialog dialog(scheduleData, this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QVariantMap data = dialog.getScheduleData();
+
+        bool success = DataManager::instance().updateSchedule(
+            scheduleId,
+            data["title"].toString(),
+            data["date"].toString(),
+            data["start_time"].toString(),
+            data["end_time"].toString(),
+            data["location"].toString(),
+            data["memo"].toString(),
+            data["category"].toString()
+            );
+
+        if (success) {
+            // AI 요약 무효화 (원래 날짜와 새 날짜 모두)
+            DataManager::instance().invalidateSummary(m_userId, scheduleData["date"].toString());
+            DataManager::instance().invalidateSummary(m_userId, data["date"].toString());
+
+            // UI 갱신
+            updateCalendarSchedules();
+            loadSchedulesForDate(m_selectedDate);
+
+            QMessageBox::information(this, "일정 수정", "일정이 성공적으로 수정되었습니다.");
+        } else {
+            QMessageBox::warning(this, "오류", "일정 수정에 실패했습니다.");
+        }
+    }
 }
 
 void SchedulePage::onDeleteSchedule()
 {
-    if (!ui->scheduleList->currentItem() ||
-        ui->scheduleList->currentItem()->text() == "일정이 없습니다.") {
+    QListWidgetItem *item = ui->scheduleList->currentItem();
+    if (!item) {
         return;
     }
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "일정 삭제",
-                                  "선택한 일정을 삭제하시겠습니까?",
-                                  QMessageBox::Yes | QMessageBox::No);
+    int scheduleId = item->data(Qt::UserRole).toInt();
+    if (scheduleId <= 0) {
+        return;
+    }
+
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this,
+        "일정 삭제",
+        "선택한 일정을 삭제하시겠습니까?",
+        QMessageBox::Yes | QMessageBox::No
+        );
 
     if (reply == QMessageBox::Yes) {
-        QString scheduleText = ui->scheduleList->currentItem()->text();
-        if (m_scheduleData.contains(m_selectedDate)) {
-            m_scheduleData[m_selectedDate].removeOne(scheduleText);
-            if (m_scheduleData[m_selectedDate].isEmpty()) {
-                m_scheduleData.remove(m_selectedDate);
-            }
+        // 삭제 전 날짜 정보 가져오기 (AI 요약 무효화용)
+        QVariantMap scheduleData = DataManager::instance().getScheduleById(scheduleId);
+        QString dateStr = scheduleData["date"].toString();
+
+        bool success = DataManager::instance().deleteSchedule(scheduleId);
+
+        if (success) {
+            // AI 요약 무효화
+            DataManager::instance().invalidateSummary(m_userId, dateStr);
+
+            // UI 갱신
+            updateCalendarSchedules();
+            loadSchedulesForDate(m_selectedDate);
+
+            QMessageBox::information(this, "삭제 완료", "일정이 삭제되었습니다.");
+        } else {
+            QMessageBox::warning(this, "오류", "일정 삭제에 실패했습니다.");
         }
-
-        updateCalendarSchedules();
-        loadSchedulesForDate(m_selectedDate);
-
-        QMessageBox::information(this, "삭제 완료", "일정이 삭제되었습니다.");
     }
 }
