@@ -11,7 +11,7 @@ class DataManager : public QWidget
 {
     Q_OBJECT
 public:
-    static DataManager* instance();
+    static DataManager& instance();
 
     // ============================================================================
     // 유저 정보
@@ -86,8 +86,10 @@ public:
 
 
 private:
-    DataManager(QWidget *parent = nullptr);
+    explicit DataManager();
     ~DataManager();
+    DataManager(const DataManager&) = delete;
+    DataManager& operator=(const DataManager&) = delete;
 
     bool initializeDataBase();
 

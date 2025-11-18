@@ -36,5 +36,6 @@ int main(int argc, char *argv[])
     //         return a.exec();
     //     }
 
+    DataManager::cleanUp();
     return a.exec();
 }

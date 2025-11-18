@@ -8,30 +8,24 @@
 #include <QRandomGenerator>
 #include <QDateTime>
 
-DataManager* DataManager::m_instance = nullptr;
-
-DataManager* DataManager::instance()
+DataManager& DataManager::instance()
 {
-    if (!m_instance) {
-        m_instance = new DataManager();
-    }
-    return m_instance;
+    static DataManager instance;  // Meyer's Singleton
+    return instance;
 }
 
-DataManager::DataManager(QWidget *parent)
-    : QWidget{parent}
+DataManager::DataManager()
 {
-    if(!initializeDataBase())
-    {
+    if(!initializeDataBase()) {
         qCritical() << "Failed to initialize database!";
     }
 }
-
 DataManager::~DataManager()
 {
     if(m_db.isOpen()) {
         m_db.close();
     }
+    qDebug() << "DataManager destroyed";
 }
 
 bool DataManager::initializeDataBase()
