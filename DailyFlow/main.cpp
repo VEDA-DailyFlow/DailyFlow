@@ -3,6 +3,7 @@
 #include "logindialog.h"
 #include "joindialog.h"
 #include "datamanager.h"
+#include <QDialog>
 #include "aiservice.h"
 
 #include <QApplication>
@@ -18,13 +19,25 @@ int main(int argc, char *argv[])
     DataManager::instance();
     AIService::instance();
 
+    LoginDialog loginDialog;
     MainWindow w(123);
     w.show();
     // LoginDialog-----------------------------------
     // LoginDialog login;
     // login.show();
 
-    // DataManager-----------------------------------
+    // 로그인 창이 닫힐 때까지 기다리다가 로그인 성공 여부를 받음
+    int result = loginDialog.exec();
+
+    // // 로그인 성공 시에만 MainWindow를 띄움
+    // if (result == QDialog::Accepted) {
+    //     MainWindow *mainWin = new MainWindow();
+    //     mainWin->setAttribute(Qt::WA_DeleteOnClose);
+    //     mainWin->show();
+
+    //     // mainWin이 떠야 하므로 a.exec()가 필요
+    //     return a.exec();
+    // }
 
 
     // JoinDialog------------------------------------
