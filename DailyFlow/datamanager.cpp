@@ -8,30 +8,24 @@
 #include <QRandomGenerator>
 #include <QDateTime>
 
-DataManager* DataManager::m_instance = nullptr;
-
-DataManager* DataManager::instance()
+DataManager& DataManager::instance()
 {
-    if (!m_instance) {
-        m_instance = new DataManager();
-    }
-    return m_instance;
+    static DataManager instance;  // Meyer's Singleton
+    return instance;
 }
 
-DataManager::DataManager(QWidget *parent)
-    : QWidget{parent}
+DataManager::DataManager()
 {
-    if(!initializeDataBase())
-    {
+    if(!initializeDataBase()) {
         qCritical() << "Failed to initialize database!";
     }
 }
-
 DataManager::~DataManager()
 {
     if(m_db.isOpen()) {
         m_db.close();
     }
+    qDebug() << "DataManager destroyed";
 }
 
 bool DataManager::initializeDataBase()
@@ -145,24 +139,32 @@ bool DataManager::addUser(const QString &username,
     return true;
 }
 
-bool DataManager::loginUser(const QString& username, const QString& password)
+int DataManager::loginUser(const QString& username, const QString& password)
 {
     QSqlQuery query(m_db);
-    query.prepare("SELECT password FROM users WHERE username = :username");
+    query.prepare("SELECT id, password FROM users WHERE username = :username");
     query.bindValue(":username", username);
 
     if (!query.exec()) {
         qDebug() << "Error: Login query failed:" << query.lastError().text();
-        return false;
+        return -1;  // 쿼리 실패
     }
 
     if (!query.next()) {
         qDebug() << "Error: User not found";
-        return false;
+        return -1;  // 사용자 없음
     }
 
-    QString storedHash = query.value(0).toString();
-    return verifyPassword(password, storedHash);
+    int userId = query.value(0).toInt();
+    QString storedHash = query.value(1).toString();
+
+    if (!verifyPassword(password, storedHash)) {
+        qDebug() << "Error: Password is incorrect";
+        return -1;  // 비밀번호 틀림
+    }
+
+    qDebug() << "Login successful for user:" << username << "ID:" << userId;
+    return userId;  // 로그인 성공, userId 반환
 }
 
 bool DataManager::updateUser(int userId,
@@ -230,6 +232,8 @@ bool DataManager::deleteUser(int userId)
 {
     QSqlQuery query(m_db);
 
+    m_db.transaction();
+
     // 먼저 관련 일정 삭제
     query.prepare("DELETE FROM schedules WHERE userId = :userId");
     query.bindValue(":userId", userId);
@@ -246,9 +250,10 @@ bool DataManager::deleteUser(int userId)
 
     if (!query.exec()) {
         qDebug() << "Error: Failed to delete user:" << query.lastError().text();
+        m_db.rollback();
         return false;
     }
-
+    m_db.commit();
     qDebug() << "User" << userId << "deleted successfully!";
     return true;
 }
@@ -264,6 +269,29 @@ bool DataManager::userExists(const QString& username)
     }
 
     return false;
+}
+
+QVariantMap DataManager::getUserInfo(int userId)
+{
+    QVariantMap userInfo;
+    QSqlQuery query(m_db);
+
+    query.prepare("SELECT id, username, name, email, dateOfBirth, address "
+                  "FROM users WHERE id = :userId");
+    query.bindValue(":userId", userId);
+
+    if (query.exec() && query.next()) {
+        userInfo["id"] = query.value(0).toInt();
+        userInfo["username"] = query.value(1).toString();
+        userInfo["name"] = query.value(2).toString();
+        userInfo["email"] = query.value(3).toString();
+        userInfo["dateOfBirth"] = query.value(4).toString();
+        userInfo["address"] = query.value(5).toString();
+    } else {
+        qDebug() << "Error: Failed to get user info:" << query.lastError().text();
+    }
+
+    return userInfo;
 }
 
 // ============================================================================

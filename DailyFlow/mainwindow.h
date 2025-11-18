@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(const QString &userId, QWidget *parent = nullptr);
+    MainWindow(const int &userId, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -27,6 +27,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    int m_Id;
     QString m_userId;
     QString m_userName;
 

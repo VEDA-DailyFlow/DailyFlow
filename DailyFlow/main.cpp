@@ -4,6 +4,7 @@
 #include "joindialog.h"
 #include "datamanager.h"
 #include <QDialog>
+#include "aiservice.h"
 
 #include <QApplication>
 
@@ -14,10 +15,16 @@ int main(int argc, char *argv[])
     if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
-    // DataManager 싱글톤 인스턴스 생성
+    // DataManager, ai service 싱글톤 인스턴스 생성
     DataManager::instance();
+    AIService::instance();
 
     LoginDialog loginDialog;
+    MainWindow w(123);
+    w.show();
+    // LoginDialog-----------------------------------
+    // LoginDialog login;
+    // login.show();
 
     // 로그인 창이 닫힐 때까지 기다리다가 로그인 성공 여부를 받음
     int result = loginDialog.exec();

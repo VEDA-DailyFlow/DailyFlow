@@ -11,7 +11,7 @@ class DataManager : public QWidget
 {
     Q_OBJECT
 public:
-    static DataManager* instance();
+    static DataManager& instance();
 
     // ============================================================================
     // 유저 정보
@@ -22,7 +22,7 @@ public:
                  const QString &email,
                  const QString &dateOfBirth,
                  const QString &address);
-    bool loginUser(const QString& username, const QString& password);
+    int loginUser(const QString& username, const QString& password);
     bool updateUser(int userId,
                     const QString& name,
                     const QString& email,
@@ -33,7 +33,7 @@ public:
                     const QString& newPassword);
     bool deleteUser(int userId);
     bool userExists(const QString& username);
-
+    QVariantMap getUserInfo(int userId);
 
     // ============================================================================
     // 스케줄 정보
@@ -86,12 +86,13 @@ public:
 
 
 private:
-    DataManager(QWidget *parent = nullptr);
+    explicit DataManager();
     ~DataManager();
+    DataManager(const DataManager&) = delete;
+    DataManager& operator=(const DataManager&) = delete;
 
     bool initializeDataBase();
 
-    static DataManager* m_instance; //싱글톤 인스턴스
     QSqlDatabase m_db;  // 데이터베이스 객체
     QSqlTableModel* m_model;
 
