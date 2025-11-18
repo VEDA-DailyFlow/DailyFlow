@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidgetItem>
+#include <QMap>
 
 namespace Ui {
 class HomePage;
@@ -23,15 +24,17 @@ private slots:
     void onScheduleItemClicked(QListWidgetItem *item);
     void onEditButtonClicked();
     void onDeleteButtonClicked();
+    void onRefreshButtonClicked();    // 통합 새로고침 버튼
 
 private:
-    void loadAISummary();
-    void loadUpcomingSchedules();
-    void displayScheduleDetail(int scheduleId);
-
     Ui::HomePage *ui;
     int m_userId;
-    QMap<QListWidgetItem*, int> m_itemToScheduleId;  // 리스트 아이템 -> 스케줄 ID 매핑
+    QMap<QListWidgetItem*, int> m_itemToScheduleId;
+
+    void loadAISummary();
+    void loadFortune();
+    void loadUpcomingSchedules();
+    void displayScheduleDetail(int scheduleId);
 };
 
 #endif // HOMEPAGE_H
