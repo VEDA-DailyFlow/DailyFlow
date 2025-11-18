@@ -69,6 +69,10 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
     // 로그아웃 버튼 연결
     connect(ui->logoutButton, &QPushButton::clicked, this, &MainWindow::handleLogout);
 
+    // 회원 탈퇴 시 로그아웃 처리
+    connect(m_settingsPage, &SettingsPage::logoutRequested,
+            this, &MainWindow::close);
+
     connect(&DataManager::instance(), &DataManager::scheduleChanged,
             this, [this](int userId) {
                 if (userId == m_Id) {
@@ -123,9 +127,6 @@ void MainWindow::handleLogout()
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        // 창을 닫기 전, 로그아웃 플래그를 true로 설정
-        m_isLogout = true;
-
         // 창을 닫아서 main.cpp의 QEventLoop를 종료시킴
         this->close();
     }
@@ -133,6 +134,8 @@ void MainWindow::handleLogout()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    // 창 닫기전 로그아웃 처리
+    m_isLogout = true;
     // main.cpp의 QEventLoop에 창이 닫혔다는 신호 전송
     emit windowClosed();
 

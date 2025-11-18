@@ -233,7 +233,7 @@ void SettingsPage::onDeleteAccountClicked()
 
     if (success) {
         QMessageBox::information(this, "탈퇴 완료", "회원 탈퇴가 완료되었습니다.");
-        emit logoutRequested();  // 로그아웃 처리
+        emit logoutRequested();
     } else {
         QMessageBox::critical(this, "오류", "회원 탈퇴에 실패했습니다.");
     }
