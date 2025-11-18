@@ -3,17 +3,40 @@
 #include "homepage.h"
 #include "schedulepage.h"
 #include "settingspage.h"
-
+#include "datamanager.h"
 #include <QMessageBox>
+#include <QVariantMap>
+#include <QTimer>
 
-MainWindow::MainWindow(const QString &userId, QWidget *parent)
+
+MainWindow::MainWindow(const int &userId, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_userId(userId)
-    , m_userName("엄도윤") // TODO: DataManager에서 실제 사용자 이름 가져오기
+    , m_Id(userId)
 {
     ui->setupUi(this);
+    QVariantMap userInfo = DataManager::instance().getUserInfo(userId);
 
+    // 오류 검출: 사용자 정보가 비어있는지 확인
+    if (userInfo.isEmpty()) {
+        qCritical() << "Failed to load user info for userId:" << userId;
+
+        // 사용자에게 에러 메시지 표시
+        QMessageBox::critical(this, "오류",
+                              "사용자 정보를 불러올 수 없습니다.\n다시 로그인해주세요.");
+
+        // MainWindow 닫고 로그인 화면으로 돌아가기
+        QTimer::singleShot(0, this, [this]() {
+            this->close();
+            // LoginWindow *loginWindow = new LoginWindow();
+            // loginWindow->show();
+        });
+
+        return;
+    }
+
+    m_userId = userInfo["username"].toString();
+    m_userName = userInfo["name"].toString();
     // 사용자 이름 설정
     ui->userLabel->setText(m_userName + "님");
 

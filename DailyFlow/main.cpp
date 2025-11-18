@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     DataManager::instance();
     AIService::instance();
 
-    MainWindow w("sss");
+    MainWindow w(123);
     w.show();
     // LoginDialog-----------------------------------
     // LoginDialog login;
