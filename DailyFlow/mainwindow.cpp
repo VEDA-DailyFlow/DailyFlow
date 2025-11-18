@@ -112,7 +112,19 @@ void MainWindow::handleLogout()
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        // TODO: 로그아웃 처리 및 로그인 화면으로 이동
-        QMessageBox::information(this, "로그아웃", "로그아웃 기능은 추후 구현 예정입니다.");
+        // 창을 닫기 전, 로그아웃 플래그를 true로 설정
+        m_isLogout = true;
+
+        // 창을 닫아서 main.cpp의 QEventLoop를 종료시킴
+        this->close();
     }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    // main.cpp의 QEventLoop에 창이 닫혔다는 신호 전송
+    emit windowClosed();
+
+    // QMainWindow의 기본 닫기 기능 실행
+    QMainWindow::closeEvent(event);
 }
