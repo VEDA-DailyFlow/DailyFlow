@@ -9,6 +9,48 @@ JoinDialog::JoinDialog(QWidget *parent)
     , ui(new Ui::JoinDialog)
 {
     ui->setupUi(this);
+
+    // 모든 QLineEdit에 스타일 적용
+    QString lineEditStyle =
+        "QLineEdit {"
+        "   padding: 8px;"
+        "   border: 2px solid #ddd;"
+        "   border-radius: 4px;"
+        "   font-size: 14px;"
+        "   color: #000000;"
+        "   background-color: #ffffff;"
+        "}"
+        "QLineEdit:focus {"
+        "   border-color: #2196F3;"
+        "}";
+
+    ui->usernameLineEdit->setStyleSheet(lineEditStyle);
+    ui->passwordLineEdit->setStyleSheet(lineEditStyle);
+    ui->confirmPasswordLineEdit->setStyleSheet(lineEditStyle);
+    ui->nameLineEdit->setStyleSheet(lineEditStyle);
+    ui->emailLineEdit->setStyleSheet(lineEditStyle);
+    ui->addressLineEdit->setStyleSheet(lineEditStyle);
+    ui->addressDetailLineEdit->setStyleSheet(lineEditStyle);
+    ui->emailDomainComboBox->setStyleSheet(lineEditStyle);
+    ui->dateOfBirthEdit->setStyleSheet(lineEditStyle);
+
+    // QPalette 설정
+    QPalette palette;
+    palette.setColor(QPalette::Text, Qt::black);
+    palette.setColor(QPalette::Base, Qt::white);
+
+    ui->usernameLineEdit->setPalette(palette);
+    ui->passwordLineEdit->setPalette(palette);
+    ui->confirmPasswordLineEdit->setPalette(palette);
+    ui->nameLineEdit->setPalette(palette);
+    ui->emailLineEdit->setPalette(palette);
+    ui->addressLineEdit->setPalette(palette);
+    ui->addressDetailLineEdit->setPalette(palette);
+    ui->emailDomainComboBox->setPalette(palette);
+    ui->dateOfBirthEdit->setPalette(palette);
+
+    // 포커스 설정
+    ui->usernameLineEdit->setFocus();
 }
 
 JoinDialog::~JoinDialog()
@@ -75,7 +117,7 @@ void JoinDialog::on_submitButton_clicked()
     // 4. 결과 처리
     if (success) {
         QMessageBox::information(this, "회원가입 성공", "회원가입이 완료되었습니다!");
-        close();  // 회원가입 창 닫기
+        accept();  // close() 대신 accept() 사용
     } else {
         QMessageBox::warning(this, "회원가입 실패",
                              "회원가입에 실패했습니다.\n(중복된 Username일 수 있습니다)");
@@ -84,13 +126,12 @@ void JoinDialog::on_submitButton_clicked()
 
 void JoinDialog::on_cancelButton_clicked()
 {
-    // 취소 버튼: 확인 후 창 닫기
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "취소 확인",
                                   "회원가입을 취소하시겠습니까?",
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        close();
+        reject();  // close() 대신 reject() 사용
     }
 }
