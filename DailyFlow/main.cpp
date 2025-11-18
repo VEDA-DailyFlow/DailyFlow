@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    if(!EnvLoader::load(".env")){
+    if(!EnvLoader::load("C:/Users/2-15/Desktop/project/DailyFlow/DailyFlow/.env")){
         qWarning() << ".env file not found or invalid!";
     }
     // DataManager, ai service 싱글톤 인스턴스 생성

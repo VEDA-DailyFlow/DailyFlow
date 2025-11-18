@@ -8,6 +8,9 @@
 *.dylib
 *.exe
 
+# 환경 변수
+.env
+
 # Qt 관련
 *.pro.user
 *.pro.user.*
