@@ -33,7 +33,7 @@ public:
                     const QString& newPassword);
     bool deleteUser(int userId);
     bool userExists(const QString& username);
-
+    QVariantMap getUserInfo(int userId);
 
     // ============================================================================
     // 스케줄 정보
@@ -93,7 +93,6 @@ private:
 
     bool initializeDataBase();
 
-    static DataManager* m_instance; //싱글톤 인스턴스
     QSqlDatabase m_db;  // 데이터베이스 객체
     QSqlTableModel* m_model;
 

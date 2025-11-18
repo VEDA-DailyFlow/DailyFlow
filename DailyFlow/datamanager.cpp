@@ -271,6 +271,29 @@ bool DataManager::userExists(const QString& username)
     return false;
 }
 
+QVariantMap DataManager::getUserInfo(int userId)
+{
+    QVariantMap userInfo;
+    QSqlQuery query(m_db);
+
+    query.prepare("SELECT id, username, name, email, dateOfBirth, address "
+                  "FROM users WHERE id = :userId");
+    query.bindValue(":userId", userId);
+
+    if (query.exec() && query.next()) {
+        userInfo["id"] = query.value(0).toInt();
+        userInfo["username"] = query.value(1).toString();
+        userInfo["name"] = query.value(2).toString();
+        userInfo["email"] = query.value(3).toString();
+        userInfo["dateOfBirth"] = query.value(4).toString();
+        userInfo["address"] = query.value(5).toString();
+    } else {
+        qDebug() << "Error: Failed to get user info:" << query.lastError().text();
+    }
+
+    return userInfo;
+}
+
 // ============================================================================
 // 스케줄 정보
 // ============================================================================
