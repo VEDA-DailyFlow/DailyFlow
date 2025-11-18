@@ -12,8 +12,8 @@ class AIService : public QObject
 public:
     static AIService& instance();
 
-    QString generateDailySummary(const QString &userId);
-    QString generateTodaysFortune(const QString &userId);
+    QString generateDailySummary(int userId);
+    QString generateTodaysFortune(int userId);
 
 private:
     AIService();
@@ -28,6 +28,7 @@ private:
 
     QString callOpenAI(const QString &prompt);
     QString getWeather(const QString &loc);
+    QString parseLocationFromAddress(const QString &address);
 };
 
 #endif // AISERVICE_H
