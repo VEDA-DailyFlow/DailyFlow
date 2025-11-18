@@ -43,7 +43,7 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
     // 각 페이지 생성
     m_homePage = new HomePage(m_Id, this);
     m_schedulePage = new SchedulePage(m_Id, this);
-    m_settingsPage = new SettingsPage(m_userId, this);
+    m_settingsPage = new SettingsPage(m_Id, this);
 
     // 스택 위젯에 페이지 추가
     ui->stackedWidget->addWidget(m_homePage);

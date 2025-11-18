@@ -6,67 +6,219 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>600</width>
+    <height>650</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="mainLayout">
-   <property name="spacing">
-    <number>15</number>
-   </property>
-   <property name="leftMargin">
-    <number>20</number>
-   </property>
-   <property name="topMargin">
-    <number>20</number>
-   </property>
-   <property name="rightMargin">
-    <number>20</number>
-   </property>
-   <property name="bottomMargin">
-    <number>20</number>
-   </property>
+  <property name="windowTitle">
+   <string>설정</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="titleLabel">
-     <property name="text">
-      <string>⚙️ 설정</string>
+    <widget class="QLabel" name="labelTitle">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <bold>true</bold>
+      </font>
      </property>
-     <property name="styleSheet">
-      <string>font-size: 24px;
-font-weight: bold;
-color: #2196F3;
-padding: 20px;</string>
+     <property name="text">
+      <string>설정</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="infoBox">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupTheme">
      <property name="title">
-      <string>안내</string>
+      <string>테마 설정</string>
      </property>
-     <property name="styleSheet">
-      <string>QGroupBox {
-   font-size: 14px;
-   border: 1px solid #ddd;
-   border-radius: 8px;
-   margin-top: 10px;
-   padding: 20px;
-}</string>
-     </property>
-     <layout class="QVBoxLayout" name="infoLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="infoLabel">
+       <widget class="QCheckBox" name="checkDarkMode">
         <property name="text">
-         <string>설정 페이지는 추후 구현 예정입니다.
-
-구현 예정 기능:
-- 프로필 설정
-- 알림 설정
-- 테마 변경
-- 카테고리 관리</string>
+         <string>다크 모드</string>
         </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupUserInfo">
+     <property name="title">
+      <string>회원 정보</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelUsername">
+        <property name="text">
+         <string>아이디:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditUsername">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelName">
+        <property name="text">
+         <string>이름:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditName">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelEmail">
+        <property name="text">
+         <string>이메일:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEditEmail">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelDateOfBirth">
+        <property name="text">
+         <string>생년월일:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="lineEditDateOfBirth">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>YYYY-MM-DD</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelAddress">
+        <property name="text">
+         <string>주소:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="lineEditAddress">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="btnEditInfo">
+       <property name="text">
+        <string>회원 정보 수정</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSaveInfo">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>저장</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCancelEdit">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>취소</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupPassword">
+     <property name="title">
+      <string>비밀번호</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QPushButton" name="btnChangePassword">
+        <property name="text">
+         <string>비밀번호 변경</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupDeleteAccount">
+     <property name="title">
+      <string>계정 관리</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QPushButton" name="btnDeleteAccount">
         <property name="styleSheet">
-         <string>font-size: 13px; line-height: 1.6;</string>
+         <string>QPushButton {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+QPushButton:hover {
+    background-color: #c82333;
+}
+QPushButton:pressed {
+    background-color: #bd2130;
+}</string>
+        </property>
+        <property name="text">
+         <string>회원 탈퇴</string>
         </property>
        </widget>
       </item>
@@ -76,7 +228,7 @@ padding: 20px;</string>
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
