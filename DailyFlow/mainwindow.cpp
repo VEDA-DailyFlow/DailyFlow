@@ -41,7 +41,7 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
     ui->userLabel->setText(m_userName + "님");
 
     // 각 페이지 생성
-    m_homePage = new HomePage(m_userId, this);
+    m_homePage = new HomePage(m_Id, this);
     m_schedulePage = new SchedulePage(m_userId, this);
     m_settingsPage = new SettingsPage(m_userId, this);
 
