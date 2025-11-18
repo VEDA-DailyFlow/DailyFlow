@@ -3,6 +3,7 @@
 #include "logindialog.h"
 #include "joindialog.h"
 #include "datamanager.h"
+#include "aiservice.h"
 
 #include <QApplication>
 
@@ -13,8 +14,9 @@ int main(int argc, char *argv[])
     if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
-    // DataManager 싱글톤 인스턴스 생성
+    // DataManager, ai service 싱글톤 인스턴스 생성
     DataManager::instance();
+    AIService::instance();
 
     MainWindow w("sss");
     w.show();
@@ -36,6 +38,5 @@ int main(int argc, char *argv[])
     //         return a.exec();
     //     }
 
-    DataManager::cleanUp();
     return a.exec();
 }
