@@ -8,16 +8,22 @@
 #include <QRandomGenerator>
 #include <QDateTime>
 
+DataManager* DataManager::m_instance = nullptr;
+
+DataManager* DataManager::instance()
+{
+    if (!m_instance) {
+        m_instance = new DataManager();
+    }
+    return m_instance;
+}
+
 DataManager::DataManager(QWidget *parent)
     : QWidget{parent}
 {
-    if(initializeDataBase())
+    if(!initializeDataBase())
     {
-        qDebug() << "initialize DataBase Success";
-    }
-    else
-    {
-        qDebug() << "DataBase Fail";
+        qCritical() << "Failed to initialize database!";
     }
 }
 
@@ -186,7 +192,6 @@ bool DataManager::updateUser(int userId,
 }
 
 bool DataManager::changePassword(int userId,
-                                 const QString& name,
                                  const QString& oldPassword,
                                  const QString& newPassword)
 {

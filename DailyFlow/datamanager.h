@@ -11,10 +11,7 @@ class DataManager : public QWidget
 {
     Q_OBJECT
 public:
-    DataManager(QWidget *parent = nullptr);
-    ~DataManager();
-
-    bool initializeDataBase();
+    static DataManager* instance();
 
     // ============================================================================
     // 유저 정보
@@ -89,6 +86,12 @@ public:
 
 
 private:
+    DataManager(QWidget *parent = nullptr);
+    ~DataManager();
+
+    bool initializeDataBase();
+
+    static DataManager* m_instance; //싱글톤 인스턴스
     QSqlDatabase m_db;  // 데이터베이스 객체
     QSqlTableModel* m_model;
 

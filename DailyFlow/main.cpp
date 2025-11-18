@@ -13,7 +13,8 @@ int main(int argc, char *argv[])
     if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
-    DataManager dataManager;
+    // DataManager 싱글톤 인스턴스 생성
+    DataManager::instance();
 
     MainWindow w("sss");
     w.show();
