@@ -325,6 +325,7 @@ bool DataManager::addSchedule(int userId, const QString& title, const QString& d
 
     // 해당 날짜의 요약 무효화
     invalidateSummary(userId, date);
+    emit scheduleChanged(userId);
 
     qDebug() << "Schedule added successfully!";
     return true;
@@ -483,6 +484,7 @@ bool DataManager::updateSchedule(int scheduleId, const QString& title, const QSt
 
     // 관련된 날짜의 요약 무효화
     invalidateSummary(userId, oldDate);
+    emit scheduleChanged(userId);
     if (date != oldDate) {
         invalidateSummary(userId, date);
     }
@@ -509,6 +511,7 @@ bool DataManager::deleteSchedule(int scheduleId)
 
     // 해당 날짜의 요약 무효화
     invalidateSummary(userId, date);
+    emit scheduleChanged(userId);
 
     qDebug() << "Schedule" << scheduleId << "deleted successfully!";
     return true;

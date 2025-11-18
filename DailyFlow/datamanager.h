@@ -86,6 +86,8 @@ public:
     // 오래된 요약 삭제 (선택사항)
     bool cleanOldSummaries(int daysToKeep = 30);
 
+signals:
+    void scheduleChanged(int userId);
 
 private:
     explicit DataManager();
