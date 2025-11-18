@@ -10,11 +10,11 @@ DataManager::DataManager(QWidget *parent)
 {
     if(initializeDataBase())  // 1. SQLite 데이터베이스 파일 생성
     {
-
+        insertDataToTable();
     }
 }
 
-bool DataManager::initializeDataBase()  // 1. SQLite 데이터베이스 파일 생성
+bool DataManager::initializeDataBase()  // 1. 데이터베이스와 users, schedules 테이블 생성
 {
     // 고유한 연결 이름을 사용해 DB 중복 연결 방지
     const QString connectionName = "DailyFlowConnection";
@@ -73,5 +73,33 @@ bool DataManager::initializeDataBase()  // 1. SQLite 데이터베이스 파일 �
 
     // 초기화 성공
     qDebug() << "Database and tables initialized successfully.";
+    return true;
+}
+
+bool DataManager::addUser(const QString &username,
+                          const QString &password,
+                          const QString &name,
+                          const QString &email,
+                          const QString &dateOfBirth,
+                          const QString &address)
+{
+    QSqlQuery query(m_db);
+
+    query.prepare("INSERT INTO users (username, password, name, email, dateOfBirth, address) "
+                  "VALUES (:username, :password, :name, :email, :dateOfBirth, :address)");  // 새 컬럼 추가
+
+    query.bindValue(":username", username);
+    query.bindValue(":password", password); // 해싱 필요
+    query.bindValue(":name", name);
+    query.bindValue(":email", email);
+    query.bindValue(":dateOfBirth", dateOfBirth);
+    query.bindValue(":address", address);
+
+    if (!query.exec()) {
+        qDebug() << "Error: Failed to add user:" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "User" << username << "added successfully!";
     return true;
 }
