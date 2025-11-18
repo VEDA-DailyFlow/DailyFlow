@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
     if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
+    // DataManager 싱글톤 인스턴스 생성
+    DataManager::instance();
+
     MainWindow w("sss");
     w.show();
     // LoginDialog-----------------------------------
@@ -20,7 +23,7 @@ int main(int argc, char *argv[])
     // login.show();
 
     // DataManager-----------------------------------
-    DataManager dataManager;
+
 
     // JoinDialog------------------------------------
     // JoinDialog join;
