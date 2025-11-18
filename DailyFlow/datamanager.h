@@ -64,6 +64,8 @@ public:
 
     // 카테고리별 일정 조회
     QList<QVariantMap> getSchedulesByCategory(int userId, const QString& category);
+    // 오늘부터 일정기간 동안의 일정 조회
+    QList<QVariantMap> getSchedulesForNextDays(int userId, int days = 7);
 
     // ============================================================================
     // AI 유저
