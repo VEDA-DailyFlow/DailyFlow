@@ -4,13 +4,19 @@
 #include <QSqlError>
 #include <QFile>
 #include <QDebug>
+#include <QCryptographicHash>
+#include <QRandomGenerator>
 
 DataManager::DataManager(QWidget *parent)
     : QWidget{parent}
 {
     if(initializeDataBase())  // 1. SQLite 데이터베이스 파일 생성
     {
-        insertDataToTable();
+        qDebug() << "initialize DataBase Success";
+    }
+    else
+    {
+        qDebug() << "DataBase Fail";
     }
 }
 
@@ -76,6 +82,8 @@ bool DataManager::initializeDataBase()  // 1. 데이터베이스와 users, sched
     return true;
 }
 
+
+// USER 관련 함수
 bool DataManager::addUser(const QString &username,
                           const QString &password,
                           const QString &name,
@@ -88,8 +96,10 @@ bool DataManager::addUser(const QString &username,
     query.prepare("INSERT INTO users (username, password, name, email, dateOfBirth, address) "
                   "VALUES (:username, :password, :name, :email, :dateOfBirth, :address)");  // 새 컬럼 추가
 
+    QString hashedPassword = hashPassword(password);
+
     query.bindValue(":username", username);
-    query.bindValue(":password", password); // 해싱 필요
+    query.bindValue(":password", hashedPassword);
     query.bindValue(":name", name);
     query.bindValue(":email", email);
     query.bindValue(":dateOfBirth", dateOfBirth);
@@ -102,4 +112,37 @@ bool DataManager::addUser(const QString &username,
 
     qDebug() << "User" << username << "added successfully!";
     return true;
+}
+
+
+QString DataManager::hashPassword(const QString& password)
+{
+    // Salt 생성 (랜덤 16바이트)
+    QByteArray salt;
+    for(int i = 0; i < 16; i++) {
+        salt.append(static_cast<char>(QRandomGenerator::global()->generate()));
+    }
+
+    // 반복 해싱
+    QByteArray hash = password.toUtf8() + salt;
+    for(int i = 0; i < 10000; i++) {
+        hash = QCryptographicHash::hash(hash, QCryptographicHash::Sha256);
+    }
+
+    // Salt와 Hash를 함께 저장 (salt:hash 형식)
+    return salt.toHex() + ":" + hash.toHex();
+}
+
+bool DataManager::verifyPassword(const QString& password, const QString& storedHash)
+{
+    QStringList parts = storedHash.split(":");
+    QByteArray salt = QByteArray::fromHex(parts[0].toUtf8());
+    QByteArray originalHash = QByteArray::fromHex(parts[1].toUtf8());
+
+    QByteArray hash = password.toUtf8() + salt;
+    for(int i = 0; i < 10000; i++) {
+        hash = QCryptographicHash::hash(hash, QCryptographicHash::Sha256);
+    }
+
+    return hash == originalHash;
 }

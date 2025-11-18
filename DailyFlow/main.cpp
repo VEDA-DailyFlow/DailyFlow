@@ -13,6 +13,8 @@ int main(int argc, char *argv[])
     if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
+    DataManager dataManager;
+
     MainWindow w("sss");
     w.show();
     // LoginDialog-----------------------------------
@@ -20,7 +22,7 @@ int main(int argc, char *argv[])
     // login.show();
 
     // DataManager-----------------------------------
-    DataManager dataManager;
+
 
     // JoinDialog------------------------------------
     // JoinDialog join;
