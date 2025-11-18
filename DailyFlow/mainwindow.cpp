@@ -41,8 +41,8 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
     ui->userLabel->setText(m_userName + "님");
 
     // 각 페이지 생성
-    m_homePage = new HomePage(m_userId, this);
-    m_schedulePage = new SchedulePage(m_userId, this);
+    m_homePage = new HomePage(m_Id, this);
+    m_schedulePage = new SchedulePage(m_Id, this);
     m_settingsPage = new SettingsPage(m_userId, this);
 
     // 스택 위젯에 페이지 추가
@@ -57,6 +57,13 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
 
     // 로그아웃 버튼 연결
     connect(ui->logoutButton, &QPushButton::clicked, this, &MainWindow::handleLogout);
+
+    connect(&DataManager::instance(), &DataManager::scheduleChanged,
+            this, [this](int userId) {
+                if (userId == m_Id) {
+                    m_homePage->refreshSchedules();
+                }
+            });
 
     // 시작 시 홈 페이지 표시
     showHomePage();

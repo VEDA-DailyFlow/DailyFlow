@@ -325,6 +325,7 @@ bool DataManager::addSchedule(int userId, const QString& title, const QString& d
 
     // 해당 날짜의 요약 무효화
     invalidateSummary(userId, date);
+    emit scheduleChanged(userId);
 
     qDebug() << "Schedule added successfully!";
     return true;
@@ -483,6 +484,7 @@ bool DataManager::updateSchedule(int scheduleId, const QString& title, const QSt
 
     // 관련된 날짜의 요약 무효화
     invalidateSummary(userId, oldDate);
+    emit scheduleChanged(userId);
     if (date != oldDate) {
         invalidateSummary(userId, date);
     }
@@ -509,6 +511,7 @@ bool DataManager::deleteSchedule(int scheduleId)
 
     // 해당 날짜의 요약 무효화
     invalidateSummary(userId, date);
+    emit scheduleChanged(userId);
 
     qDebug() << "Schedule" << scheduleId << "deleted successfully!";
     return true;
@@ -593,6 +596,47 @@ QList<QVariantMap> DataManager::getSchedulesByCategory(int userId, const QString
         qDebug() << "Error: Failed to get schedules by category:" << query.lastError().text();
     }
 
+    return schedules;
+}
+
+QList<QVariantMap> DataManager::getSchedulesForNextDays(int userId, int days)
+{
+    QList<QVariantMap> schedules;
+    QSqlQuery query(m_db);
+
+    // 오늘 날짜
+    QString startDate = QDate::currentDate().toString("yyyy-MM-dd");
+
+    // 오늘부터 N일 후 날짜
+    QString endDate = QDate::currentDate().addDays(days - 1).toString("yyyy-MM-dd");
+
+    query.prepare("SELECT id, title, date, startTime, endTime, location, memo, category "
+                  "FROM schedules WHERE userId = :userId "
+                  "AND date >= :startDate AND date <= :endDate "
+                  "ORDER BY date, startTime");
+
+    query.bindValue(":userId", userId);
+    query.bindValue(":startDate", startDate);
+    query.bindValue(":endDate", endDate);
+
+    if (query.exec()) {
+        while (query.next()) {
+            QVariantMap schedule;
+            schedule["id"] = query.value(0).toInt();
+            schedule["title"] = query.value(1).toString();
+            schedule["date"] = query.value(2).toString();
+            schedule["startTime"] = query.value(3).toString();
+            schedule["endTime"] = query.value(4).toString();
+            schedule["location"] = query.value(5).toString();
+            schedule["memo"] = query.value(6).toString();
+            schedule["category"] = query.value(7).toString();
+            schedules.append(schedule);
+        }
+    } else {
+        qDebug() << "Error: Failed to get schedules for next days:" << query.lastError().text();
+    }
+
+    qDebug() << "Retrieved" << schedules.size() << "schedules from" << startDate << "to" << endDate;
     return schedules;
 }
 
