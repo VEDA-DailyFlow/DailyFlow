@@ -173,7 +173,18 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="emailDomainComboBox"/>
+        <widget class="QComboBox" name="emailDomainComboBox">
+         <item>
+          <property name="text">
+           <string>naver.com</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>google.com</string>
+          </property>
+         </item>
+        </widget>
        </item>
       </layout>
      </item>
