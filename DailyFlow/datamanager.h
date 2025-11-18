@@ -22,7 +22,7 @@ public:
                  const QString &email,
                  const QString &dateOfBirth,
                  const QString &address);
-    bool loginUser(const QString& username, const QString& password);
+    int loginUser(const QString& username, const QString& password);
     bool updateUser(int userId,
                     const QString& name,
                     const QString& email,

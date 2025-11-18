@@ -145,24 +145,32 @@ bool DataManager::addUser(const QString &username,
     return true;
 }
 
-bool DataManager::loginUser(const QString& username, const QString& password)
+int DataManager::loginUser(const QString& username, const QString& password)
 {
     QSqlQuery query(m_db);
-    query.prepare("SELECT password FROM users WHERE username = :username");
+    query.prepare("SELECT id, password FROM users WHERE username = :username");
     query.bindValue(":username", username);
 
     if (!query.exec()) {
         qDebug() << "Error: Login query failed:" << query.lastError().text();
-        return false;
+        return -1;  // 쿼리 실패
     }
 
     if (!query.next()) {
         qDebug() << "Error: User not found";
-        return false;
+        return -1;  // 사용자 없음
     }
 
-    QString storedHash = query.value(0).toString();
-    return verifyPassword(password, storedHash);
+    int userId = query.value(0).toInt();
+    QString storedHash = query.value(1).toString();
+
+    if (!verifyPassword(password, storedHash)) {
+        qDebug() << "Error: Password is incorrect";
+        return -1;  // 비밀번호 틀림
+    }
+
+    qDebug() << "Login successful for user:" << username << "ID:" << userId;
+    return userId;  // 로그인 성공, userId 반환
 }
 
 bool DataManager::updateUser(int userId,
