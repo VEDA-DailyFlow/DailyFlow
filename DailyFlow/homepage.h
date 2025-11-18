@@ -16,6 +16,9 @@ public:
     explicit HomePage(int userId, QWidget *parent = nullptr);
     ~HomePage();
 
+public slots:
+    void refreshSchedules();
+
 private slots:
     void onScheduleItemClicked(QListWidgetItem *item);
     void onEditButtonClicked();

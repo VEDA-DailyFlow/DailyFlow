@@ -1,6 +1,7 @@
 #include "homepage.h"
 #include "ui_homepage.h"
 #include "datamanager.h"
+#include "scheduledialog.h"
 #include <QDate>
 #include <QMessageBox>
 
@@ -40,6 +41,12 @@ void HomePage::loadAISummary()
     } else {
         ui->aiSummaryText->setText(summary);
     }
+}
+
+void HomePage::refreshSchedules()
+{
+    loadUpcomingSchedules();
+    loadAISummary();
 }
 
 void HomePage::loadUpcomingSchedules()
@@ -142,18 +149,39 @@ void HomePage::displayScheduleDetail(int scheduleId)
 void HomePage::onEditButtonClicked()
 {
     QListWidgetItem *currentItem = ui->scheduleList->currentItem();
-    if (!currentItem) {
-        return;
-    }
+    if (!currentItem) return;
 
     int scheduleId = m_itemToScheduleId.value(currentItem, -1);
-    if (scheduleId == -1) {
-        return;
-    }
+    if (scheduleId == -1) return;
 
-    // TODO: 일정 수정 다이얼로그 열기
-    QMessageBox::information(this, "수정",
-                             QString("일정 ID %1 수정 기능은 아직 구현되지 않았습니다.").arg(scheduleId));
+    // 일정 정보 가져오기
+    QVariantMap scheduleData = DataManager::instance().getScheduleById(scheduleId);
+
+    // ScheduleDialog 열기 (수정 모드)
+    ScheduleDialog dialog(scheduleData, this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QVariantMap data = dialog.getScheduleData();
+
+        bool success = DataManager::instance().updateSchedule(
+            scheduleId,
+            data["title"].toString(),
+            data["date"].toString(),
+            data["start_time"].toString(),
+            data["end_time"].toString(),
+            data["location"].toString(),
+            data["memo"].toString(),
+            data["category"].toString()
+            );
+
+        if (success) {
+            // DataManager가 scheduleChanged 시그널 발생
+            // MainWindow가 자동으로 HomePage 갱신해줌
+            QMessageBox::information(this, "수정 완료", "일정이 수정되었습니다.");
+        } else {
+            QMessageBox::warning(this, "오류", "일정 수정에 실패했습니다.");
+        }
+    }
 }
 
 void HomePage::onDeleteButtonClicked()
