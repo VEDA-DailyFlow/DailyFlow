@@ -238,6 +238,8 @@ bool DataManager::deleteUser(int userId)
 {
     QSqlQuery query(m_db);
 
+    m_db.transaction();
+
     // 먼저 관련 일정 삭제
     query.prepare("DELETE FROM schedules WHERE userId = :userId");
     query.bindValue(":userId", userId);
@@ -254,9 +256,10 @@ bool DataManager::deleteUser(int userId)
 
     if (!query.exec()) {
         qDebug() << "Error: Failed to delete user:" << query.lastError().text();
+        m_db.rollback();
         return false;
     }
-
+    m_db.commit();
     qDebug() << "User" << userId << "deleted successfully!";
     return true;
 }
