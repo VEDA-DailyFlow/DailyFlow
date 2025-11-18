@@ -24,17 +24,21 @@ bool EnvLoader::load(const QString &filePath){
         int equalPos = line.indexOf('=');
         if(equalPos != -1){
             QString key = line.left(equalPos).trimmed();
-            QString value = line.right(equalPos).trimmed();
+            QString value = line.mid(equalPos + 1).trimmed();  // ✅ 수정!
 
-            if((value.startsWith('"') && value.endsWith('"')) || (value.startsWith('\'') && value.endsWith('\''))){
+            // 따옴표 제거
+            if((value.startsWith('"') && value.endsWith('"')) ||
+                (value.startsWith('\'') && value.endsWith('\''))) {
                 value = value.mid(1, value.length() - 2);
             }
-            envVars[key] = value;
-        }
 
+            envVars[key] = value;
+            qDebug() << "Loaded:" << key << "=" << value.left(10) << "...";  // 디버그 출력
+        }
     }
 
     file.close();
+    qDebug() << "Total env vars loaded:" << envVars.size();
     return true;
 }
 
