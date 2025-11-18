@@ -3,6 +3,7 @@
 #include "joindialog.h"
 #include "datamanager.h"
 #include <QMessageBox>   // 사용자에게 로그인 성공 여부를 보여주기 위함
+#include <QSettings>
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),

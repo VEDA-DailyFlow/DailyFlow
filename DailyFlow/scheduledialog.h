@@ -40,6 +40,7 @@ private:
     void setupConnections();
     void loadScheduleData(const QVariantMap &data);
     bool validateInput();
+    void applyTheme();
 
     Ui::ScheduleDialog *ui;
     Mode m_mode;

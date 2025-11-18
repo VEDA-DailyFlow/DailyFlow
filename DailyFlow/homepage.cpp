@@ -5,6 +5,7 @@
 #include "scheduledialog.h"
 #include <QDate>
 #include <QMessageBox>
+#include <QSettings>
 
 HomePage::HomePage(int userId, QWidget *parent)
     : QWidget(parent)
@@ -12,6 +13,8 @@ HomePage::HomePage(int userId, QWidget *parent)
     , m_userId(userId)
 {
     ui->setupUi(this);
+    ui->refreshButton->setFixedSize(80, 30);
+    ui->aiTabWidget->setCornerWidget(ui->refreshButton, Qt::TopRightCorner);
 
     // 시그널-슬롯 연결
     connect(ui->scheduleList, &QListWidget::itemClicked,
@@ -22,6 +25,11 @@ HomePage::HomePage(int userId, QWidget *parent)
             this, &HomePage::onDeleteButtonClicked);
     connect(ui->refreshButton, &QPushButton::clicked,
             this, &HomePage::onRefreshButtonClicked);
+
+    // ★ 초기 테마 적용 (저장된 설정 불러오기)
+    QSettings settings("DailyFlow", "Settings");
+    bool isDarkMode = settings.value("darkMode", false).toBool();
+    applyTheme(isDarkMode);
 
     loadAISummary();
     loadFortune();
@@ -256,4 +264,244 @@ void HomePage::onRefreshButtonClicked()
             QMessageBox::warning(this, "오류", "오늘의 운세 생성에 실패했습니다.");
         }
     }
+}
+
+void HomePage::applyTheme(bool isDarkMode)
+{
+    if (isDarkMode) {
+        // 다크모드 스타일
+        ui->aiSummaryBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 16px;"
+            "   font-weight: bold;"
+            "   border: 2px solid #42A5F5;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "   color: white;"
+            "}"
+            "QGroupBox::title {"
+            "   subcontrol-origin: margin;"
+            "   left: 10px;"
+            "   padding: 0 5px;"
+            "}"
+            );
+
+        ui->aiTabWidget->setStyleSheet(
+            "QTabWidget::pane {"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   background-color: #2a2a2a;"
+            "}"
+            "QTabBar::tab {"
+            "   background-color: #3a3a3a;"
+            "   color: white;"
+            "   padding: 8px 20px;"
+            "   margin-right: 2px;"
+            "   border-top-left-radius: 4px;"
+            "   border-top-right-radius: 4px;"
+            "}"
+            "QTabBar::tab:selected {"
+            "   background-color: #42A5F5;"
+            "   color: white;"
+            "   font-weight: bold;"
+            "}"
+            "QTabBar::tab:hover {"
+            "   background-color: #64B5F6;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->aiSummaryText->setStyleSheet(
+            "QTextEdit {"
+            "   background-color: #2a2a2a;"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   font-size: 13px;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->fortuneText->setStyleSheet(
+            "QTextEdit {"
+            "   background-color: #3a2a3a;"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   font-size: 13px;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->scheduleListBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 14px;"
+            "   font-weight: bold;"
+            "   border: 1px solid #555;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->scheduleList->setStyleSheet(
+            "QListWidget {"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   background-color: #2a2a2a;"
+            "   color: white;"
+            "}"
+            "QListWidget::item {"
+            "   padding: 8px;"
+            "   border-bottom: 1px solid #3a3a3a;"
+            "}"
+            "QListWidget::item:selected {"
+            "   background-color: #1976D2;"
+            "   color: white;"
+            "}"
+            "QListWidget::item:hover {"
+            "   background-color: #3a3a3a;"
+            "}"
+            );
+
+        ui->detailBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 14px;"
+            "   font-weight: bold;"
+            "   border: 1px solid #555;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->scheduleDetail->setStyleSheet(
+            "QTextEdit {"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   background-color: #2a2a2a;"
+            "   font-size: 13px;"
+            "   color: white;"
+            "}"
+            );
+
+    } else {
+        // 라이트모드 스타일 (기존 UI 파일 스타일)
+        ui->aiSummaryBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 16px;"
+            "   font-weight: bold;"
+            "   border: 2px solid #2196F3;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "}"
+            "QGroupBox::title {"
+            "   subcontrol-origin: margin;"
+            "   left: 10px;"
+            "   padding: 0 5px;"
+            "}"
+            );
+
+        ui->aiTabWidget->setStyleSheet(
+            "QTabWidget::pane {"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   background-color: #f0f8ff;"
+            "}"
+            "QTabBar::tab {"
+            "   background-color: #e0e0e0;"
+            "   padding: 8px 20px;"
+            "   margin-right: 2px;"
+            "   border-top-left-radius: 4px;"
+            "   border-top-right-radius: 4px;"
+            "}"
+            "QTabBar::tab:selected {"
+            "   background-color: #2196F3;"
+            "   color: white;"
+            "   font-weight: bold;"
+            "}"
+            "QTabBar::tab:hover {"
+            "   background-color: #64B5F6;"
+            "   color: white;"
+            "}"
+            );
+
+        ui->aiSummaryText->setStyleSheet(
+            "QTextEdit {"
+            "   background-color: #f0f8ff;"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   font-size: 13px;"
+            "}"
+            );
+
+        ui->fortuneText->setStyleSheet(
+            "QTextEdit {"
+            "   background-color: #f3e5f5;"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   font-size: 13px;"
+            "}"
+            );
+
+        ui->scheduleListBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 14px;"
+            "   font-weight: bold;"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "}"
+            );
+
+        ui->scheduleList->setStyleSheet(
+            "QListWidget {"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   background-color: white;"
+            "}"
+            "QListWidget::item {"
+            "   padding: 8px;"
+            "   border-bottom: 1px solid #f0f0f0;"
+            "}"
+            "QListWidget::item:selected {"
+            "   background-color: #e3f2fd;"
+            "   color: black;"
+            "}"
+            "QListWidget::item:hover {"
+            "   background-color: #f5f5f5;"
+            "}"
+            );
+
+        ui->detailBox->setStyleSheet(
+            "QGroupBox {"
+            "   font-size: 14px;"
+            "   font-weight: bold;"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 8px;"
+            "   margin-top: 10px;"
+            "   padding-top: 10px;"
+            "}"
+            );
+
+        ui->scheduleDetail->setStyleSheet(
+            "QTextEdit {"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   padding: 10px;"
+            "   background-color: white;"
+            "   font-size: 13px;"
+            "}"
+            );
+    }
+
+    // 버튼들은 그대로 유지 (초록색, 빨간색)
 }

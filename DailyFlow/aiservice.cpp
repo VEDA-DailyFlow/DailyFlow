@@ -233,7 +233,7 @@ QString AIService::callOpenAI(const QString &prompt){
 
     // JSON 요청 본문 작성
     QJsonObject json;
-    json["model"] = "gpt-3.5-turbo";
+    json["model"] = "gpt-4o-mini";
     json["temperature"] = 0.7;
     json["max_tokens"] = 1000;
 

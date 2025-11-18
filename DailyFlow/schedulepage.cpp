@@ -4,6 +4,7 @@
 #include "datamanager.h"
 #include <QMessageBox>
 #include <QScrollArea>
+#include <QSettings>
 
 // ============================================================================
 // CustomCalendar 구현 (변경 없음)
@@ -137,11 +138,11 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
     bool isCurrentMonth = (date.month() == monthShown() && date.year() == yearShown());
 
     if (!isCurrentMonth) {
-        painter->fillRect(rect, QColor("#ffffff"));
+        painter->fillRect(rect, m_isDarkMode ? QColor("#2a2a2a") : QColor("#ffffff"));
         return;
     }
 
-    painter->fillRect(rect, QColor("#ffffff"));
+    painter->fillRect(rect, m_isDarkMode ? QColor("#2a2a2a") : QColor("#ffffff"));
 
     bool isSelected = (date == selectedDate());
     if (isSelected) {
@@ -152,7 +153,7 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
         painter->save();
         painter->setPen(QPen(QColor("#4CAF50"), 2));
         painter->setBrush(Qt::NoBrush);
-        painter->drawRoundedRect(rect.adjusted(3, 3, -3, -3), 3, 3);  // 4,4 → 3,3
+        painter->drawRoundedRect(rect.adjusted(3, 3, -3, -3), 3, 3);
         painter->restore();
     }
 
@@ -162,12 +163,12 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
     } else if (date.dayOfWeek() == Qt::Saturday || date.dayOfWeek() == Qt::Sunday) {
         textColor = QColor("#f44336");
     } else {
-        textColor = QColor("#333333");
+        textColor = m_isDarkMode ? QColor("#ffffff") : QColor("#333333");
     }
 
     painter->setPen(textColor);
     QFont font = painter->font();
-    font.setPointSize(11);  // 13 → 11
+    font.setPointSize(11);
     font.setBold(true);
     painter->setFont(font);
     painter->drawText(rect, Qt::AlignCenter, QString::number(date.day()));
@@ -176,12 +177,12 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
         painter->save();
 
         int scheduleCount = m_scheduleCounts[date];
-        int dotSize = 4;     // 5 → 4
+        int dotSize = 4;
         int spacing = 2;
         int dotsToShow = qMin(scheduleCount, 3);
         int totalWidth = dotsToShow * dotSize + (dotsToShow - 1) * spacing;
         int startX = rect.center().x() - totalWidth / 2;
-        int dotY = rect.bottom() - 8;  // 10 → 8
+        int dotY = rect.bottom() - 8;
 
         painter->setRenderHint(QPainter::Antialiasing);
 
@@ -236,6 +237,95 @@ void CustomCalendar::updateVisibleRows()
     }
 }
 
+void CustomCalendar::applyTheme(bool isDarkMode)
+{
+    m_isDarkMode = isDarkMode;
+
+    // 헤더 포맷
+    QTextCharFormat headerFormat;
+    headerFormat.setForeground(QBrush(isDarkMode ? QColor("#ffffff") : QColor("#333333")));
+    headerFormat.setFontWeight(QFont::Bold);
+    headerFormat.setFontPointSize(10);
+    setHeaderTextFormat(headerFormat);
+
+    // 주말 포맷
+    QTextCharFormat weekendFormat;
+    weekendFormat.setForeground(QBrush(QColor("#f44336")));
+    weekendFormat.setFontWeight(QFont::Bold);
+    weekendFormat.setFontPointSize(10);
+    setWeekdayTextFormat(Qt::Saturday, weekendFormat);
+    setWeekdayTextFormat(Qt::Sunday, weekendFormat);
+
+    // 평일 포맷
+    QTextCharFormat weekdayFormat;
+    weekdayFormat.setForeground(QBrush(isDarkMode ? QColor("#ffffff") : QColor("#333333")));
+    weekdayFormat.setFontWeight(QFont::Bold);
+    weekdayFormat.setFontPointSize(10);
+    setWeekdayTextFormat(Qt::Monday, weekdayFormat);
+    setWeekdayTextFormat(Qt::Tuesday, weekdayFormat);
+    setWeekdayTextFormat(Qt::Wednesday, weekdayFormat);
+    setWeekdayTextFormat(Qt::Thursday, weekdayFormat);
+    setWeekdayTextFormat(Qt::Friday, weekdayFormat);
+
+    if (isDarkMode) {
+        setStyleSheet(
+            "QCalendarWidget QWidget { background-color: #2a2a2a; }"
+            "QCalendarWidget QToolButton {"
+            "   height: 30px; width: 60px; color: #42A5F5; font-size: 12px;"
+            "   icon-size: 16px; background-color: #2a2a2a; border: none; border-radius: 4px;"
+            "}"
+            "QCalendarWidget QToolButton:hover { background-color: #3a3a3a; }"
+            "QCalendarWidget QToolButton:pressed { background-color: #4a4a4a; }"
+            "QCalendarWidget QMenu { background-color: #2a2a2a; border: 1px solid #555; color: white; }"
+            "QCalendarWidget QSpinBox {"
+            "   background-color: #2a2a2a; selection-background-color: #42A5F5;"
+            "   border: 1px solid #555; border-radius: 4px; padding: 4px; font-size: 12px; color: white;"
+            "}"
+            "QCalendarWidget QTableView {"
+            "   background-color: #2a2a2a; selection-background-color: #42A5F5;"
+            "   selection-color: white; border: none; outline: none; gridline-color: transparent;"
+            "   font-size: 12px; font-weight: bold; color: white;"
+            "}"
+            "QCalendarWidget QAbstractItemView:enabled {"
+            "   color: white; background-color: #2a2a2a;"
+            "   selection-background-color: #42A5F5; selection-color: white;"
+            "   font-size: 12px; font-weight: bold;"
+            "}"
+            "QCalendarWidget QAbstractItemView:disabled { color: #666; }"
+            "QCalendarWidget QWidget#qt_calendar_navigationbar { background-color: #2a2a2a; }"
+            );
+    } else {
+        setStyleSheet(
+            "QCalendarWidget QWidget { background-color: white; }"
+            "QCalendarWidget QToolButton {"
+            "   height: 30px; width: 60px; color: #2196F3; font-size: 12px;"
+            "   icon-size: 16px; background-color: white; border: none; border-radius: 4px;"
+            "}"
+            "QCalendarWidget QToolButton:hover { background-color: #e3f2fd; }"
+            "QCalendarWidget QToolButton:pressed { background-color: #bbdefb; }"
+            "QCalendarWidget QMenu { background-color: white; border: 1px solid #ddd; }"
+            "QCalendarWidget QSpinBox {"
+            "   background-color: white; selection-background-color: #2196F3;"
+            "   border: 1px solid #ddd; border-radius: 4px; padding: 4px; font-size: 12px;"
+            "}"
+            "QCalendarWidget QTableView {"
+            "   background-color: white; selection-background-color: #2196F3;"
+            "   selection-color: white; border: none; outline: none; gridline-color: transparent;"
+            "   font-size: 12px; font-weight: bold;"
+            "}"
+            "QCalendarWidget QAbstractItemView:enabled {"
+            "   color: #333; background-color: white;"
+            "   selection-background-color: #2196F3; selection-color: white;"
+            "   font-size: 12px; font-weight: bold;"
+            "}"
+            "QCalendarWidget QAbstractItemView:disabled { color: #bbb; }"
+            "QCalendarWidget QWidget#qt_calendar_navigationbar { background-color: white; }"
+            );
+    }
+
+    updateCells();  // 셀 다시 그리기
+}
+
 // ============================================================================
 // SchedulePage 구현 (DataManager 연동)
 // ============================================================================
@@ -277,6 +367,10 @@ SchedulePage::SchedulePage(int userId, QWidget *parent)
         ui->editButton->setEnabled(hasSelection);
         ui->deleteButton->setEnabled(hasSelection);
     });
+
+    QSettings settings("DailyFlow", "Settings");
+    bool isDarkMode = settings.value("darkMode", false).toBool();
+    applyTheme(isDarkMode);
 
     // 초기 데이터 로드
     updateCalendarSchedules();
@@ -499,5 +593,97 @@ void SchedulePage::onDeleteSchedule()
         } else {
             QMessageBox::warning(this, "오류", "일정 삭제에 실패했습니다.");
         }
+    }
+}
+
+void SchedulePage::applyTheme(bool isDarkMode)
+{
+    m_isDarkMode = isDarkMode;
+
+    // CustomCalendar 테마 적용
+    if (m_calendar) {
+        m_calendar->applyTheme(isDarkMode);
+    }
+
+    if (isDarkMode) {
+        // GroupBox 스타일 (일정 관리 제목)
+        if (ui->calendarBox) {
+            ui->calendarBox->setStyleSheet(
+                "QGroupBox {"
+                "   font-size: 16px;"
+                "   font-weight: bold;"
+                "   border: 2px solid #42A5F5;"
+                "   border-radius: 8px;"
+                "   margin-top: 10px;"
+                "   padding-top: 10px;"
+                "   color: white;"
+                "}"
+                "QGroupBox::title {"
+                "   subcontrol-origin: margin;"
+                "   left: 10px;"
+                "   padding: 0 5px;"
+                "}"
+                );
+        }
+
+        // 일정 리스트
+        ui->scheduleList->setStyleSheet(
+            "QListWidget {"
+            "   border: 1px solid #555;"
+            "   border-radius: 4px;"
+            "   background-color: #2a2a2a;"
+            "   color: white;"
+            "}"
+            "QListWidget::item {"
+            "   padding: 8px;"
+            "   border-bottom: 1px solid #3a3a3a;"
+            "}"
+            "QListWidget::item:selected {"
+            "   background-color: #1976D2;"
+            "   color: white;"
+            "}"
+            "QListWidget::item:hover {"
+            "   background-color: #3a3a3a;"
+            "}"
+            );
+
+    } else {
+        // 라이트 모드
+        if (ui->calendarBox) {
+            ui->calendarBox->setStyleSheet(
+                "QGroupBox {"
+                "   font-size: 16px;"
+                "   font-weight: bold;"
+                "   border: 2px solid #2196F3;"
+                "   border-radius: 8px;"
+                "   margin-top: 10px;"
+                "   padding-top: 10px;"
+                "}"
+                "QGroupBox::title {"
+                "   subcontrol-origin: margin;"
+                "   left: 10px;"
+                "   padding: 0 5px;"
+                "}"
+                );
+        }
+
+        ui->scheduleList->setStyleSheet(
+            "QListWidget {"
+            "   border: 1px solid #ddd;"
+            "   border-radius: 4px;"
+            "   background-color: white;"
+            "}"
+            "QListWidget::item {"
+            "   padding: 8px;"
+            "   border-bottom: 1px solid #f0f0f0;"
+            "}"
+            "QListWidget::item:selected {"
+            "   background-color: #e3f2fd;"
+            "   color: black;"
+            "}"
+            "QListWidget::item:hover {"
+            "   background-color: #f5f5f5;"
+            "}"
+            );
     }
 }

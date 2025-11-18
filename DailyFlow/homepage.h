@@ -19,6 +19,7 @@ public:
 
 public slots:
     void refreshSchedules();
+    void applyTheme(bool isDarkMode);
 
 private slots:
     void onScheduleItemClicked(QListWidgetItem *item);

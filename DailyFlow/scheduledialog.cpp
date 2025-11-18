@@ -2,6 +2,7 @@
 #include "ui_scheduledialog.h"
 #include <QMessageBox>
 #include <QTime>
+#include <QSettings>
 
 // 추가 모드 생성자
 ScheduleDialog::ScheduleDialog(QWidget *parent, const QDate &initialDate)
@@ -25,6 +26,8 @@ ScheduleDialog::ScheduleDialog(QWidget *parent, const QDate &initialDate)
     ui->endTimeEdit->setTime(endTime);
 
     validateInputFields();
+
+    applyTheme();
 }
 
 // 수정 모드 생성자
@@ -43,6 +46,8 @@ ScheduleDialog::ScheduleDialog(const QVariantMap &scheduleData, QWidget *parent)
     loadScheduleData(scheduleData);
 
     validateInputFields();
+
+    applyTheme();
 }
 
 ScheduleDialog::~ScheduleDialog()
@@ -146,4 +151,132 @@ void ScheduleDialog::onSaveClicked()
 void ScheduleDialog::onCancelClicked()
 {
     reject();  // QDialog::Rejected 반환
+}
+
+void ScheduleDialog::applyTheme()
+{
+    QSettings settings("DailyFlow", "Settings");
+    bool isDarkMode = settings.value("darkMode", false).toBool();
+
+    if (isDarkMode) {
+        setStyleSheet(
+            "QDialog { background-color: #353535; }"
+            "QLabel { font-size: 13px; font-weight: bold; color: white; }"
+            "QLineEdit, QTextEdit, QDateEdit, QTimeEdit, QComboBox {"
+            "   padding: 8px;"
+            "   border: 2px solid #555;"
+            "   border-radius: 4px;"
+            "   background-color: #2a2a2a;"
+            "   color: white;"
+            "   font-size: 13px;"
+            "}"
+            "QLineEdit:focus, QTextEdit:focus, QDateEdit:focus, QTimeEdit:focus, QComboBox:focus {"
+            "   border: 2px solid #42A5F5;"
+            "}"
+            "QComboBox::drop-down { border: none; width: 30px; }"
+            "QComboBox::down-arrow {"
+            "   image: none;"
+            "   border-left: 5px solid transparent;"
+            "   border-right: 5px solid transparent;"
+            "   border-top: 5px solid #aaa;"
+            "   margin-right: 10px;"
+            "}"
+            "QComboBox QAbstractItemView {"
+            "   background-color: #2a2a2a;"
+            "   color: white;"
+            "   selection-background-color: #42A5F5;"
+            "}"
+            "QPushButton#cancelButton {"
+            "   background-color: #757575;"
+            "   color: white;"
+            "   border: none;"
+            "   padding: 10px 20px;"
+            "   border-radius: 6px;"
+            "   font-weight: bold;"
+            "   font-size: 13px;"
+            "}"
+            "QPushButton#cancelButton:hover {"
+            "   background-color: #616161;"
+            "}"
+            "QPushButton#cancelButton:pressed {"
+            "   background-color: #424242;"
+            "}"
+            "QPushButton#saveButton {"
+            "   background-color: #2196F3;"
+            "   color: white;"
+            "   border: none;"
+            "   padding: 10px 20px;"
+            "   border-radius: 6px;"
+            "   font-weight: bold;"
+            "   font-size: 13px;"
+            "}"
+            "QPushButton#saveButton:hover:enabled {"
+            "   background-color: #1976D2;"
+            "}"
+            "QPushButton#saveButton:pressed:enabled {"
+            "   background-color: #1565C0;"
+            "}"
+            "QPushButton#saveButton:disabled {"
+            "   background-color: #555555;"
+            "   color: #888888;"
+            "}"
+            );
+    } else {
+        setStyleSheet(
+            "QDialog { background-color: white; }"
+            "QLabel { font-size: 13px; font-weight: bold; color: #333; }"
+            "QLineEdit, QTextEdit, QDateEdit, QTimeEdit, QComboBox {"
+            "   padding: 8px;"
+            "   border: 2px solid #e0e0e0;"
+            "   border-radius: 4px;"
+            "   background-color: white;"
+            "   font-size: 13px;"
+            "}"
+            "QLineEdit:focus, QTextEdit:focus, QDateEdit:focus, QTimeEdit:focus, QComboBox:focus {"
+            "   border: 2px solid #2196F3;"
+            "}"
+            "QComboBox::drop-down { border: none; width: 30px; }"
+            "QComboBox::down-arrow {"
+            "   image: none;"
+            "   border-left: 5px solid transparent;"
+            "   border-right: 5px solid transparent;"
+            "   border-top: 5px solid #666;"
+            "   margin-right: 10px;"
+            "}"
+            "QPushButton#cancelButton {"
+            "   background-color: #757575;"
+            "   color: white;"
+            "   border: none;"
+            "   padding: 10px 20px;"
+            "   border-radius: 6px;"
+            "   font-weight: bold;"
+            "   font-size: 13px;"
+            "}"
+            "QPushButton#cancelButton:hover {"
+            "   background-color: #616161;"
+            "}"
+            "QPushButton#cancelButton:pressed {"
+            "   background-color: #424242;"
+            "}"
+            "QPushButton#saveButton {"
+            "   background-color: #2196F3;"
+            "   color: white;"
+            "   border: none;"
+            "   padding: 10px 20px;"
+            "   border-radius: 6px;"
+            "   font-weight: bold;"
+            "   font-size: 13px;"
+            "}"
+            "QPushButton#saveButton:hover:enabled {"
+            "   background-color: #1976D2;"
+            "}"
+            "QPushButton#saveButton:pressed:enabled {"
+            "   background-color: #1565C0;"
+            "}"
+            "QPushButton#saveButton:disabled {"
+            "   background-color: #BDBDBD;"
+            "   color: #757575;"
+            "}"
+            );
+    }
 }

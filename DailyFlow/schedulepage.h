@@ -25,6 +25,7 @@ public:
     void addScheduleDate(const QDate &date, int count = 1);
     void removeScheduleDate(const QDate &date);
     void clearScheduleDates();
+    void applyTheme(bool isDarkMode);
 
 public slots:
     void onPageChanged(int year, int month);
@@ -37,6 +38,7 @@ protected:
 private:
     void updateVisibleRows();
     QMap<QDate, int> m_scheduleCounts;
+    bool m_isDarkMode = false;
 };
 
 class SchedulePage : public QWidget
@@ -46,6 +48,9 @@ class SchedulePage : public QWidget
 public:
     explicit SchedulePage(int userId, QWidget *parent = nullptr);
     ~SchedulePage();
+
+public slots:
+    void applyTheme(bool isDarkMode);
 
 private slots:
     void onDateSelected(const QDate &date);
@@ -57,9 +62,9 @@ private slots:
 private:
     void loadSchedulesForDate(const QDate &date);
     void updateCalendarSchedules();
-
+    bool m_isDarkMode = false;
     Ui::SchedulePage *ui;
-    int m_userId;  // QString -> int 변경
+    int m_userId;
     QDate m_selectedDate;
     CustomCalendar *m_calendar;
 };

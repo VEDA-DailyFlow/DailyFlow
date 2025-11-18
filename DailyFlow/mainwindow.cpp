@@ -55,6 +55,17 @@ MainWindow::MainWindow(const int &userId, QWidget *parent)
     connect(ui->scheduleButton, &QPushButton::clicked, this, &MainWindow::showSchedulePage);
     connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::showSettingsPage);
 
+    connect(m_settingsPage, &SettingsPage::themeChanged,
+            this, [](bool isDark){
+                qDebug() << "테마 변경됨:" << (isDark ? "다크모드" : "라이트모드");
+            });
+
+    connect(m_settingsPage, &SettingsPage::themeChanged,
+            m_homePage, &HomePage::applyTheme);
+
+    connect(m_settingsPage, &SettingsPage::themeChanged,
+            m_schedulePage, &SchedulePage::applyTheme);
+
     // 로그아웃 버튼 연결
     connect(ui->logoutButton, &QPushButton::clicked, this, &MainWindow::handleLogout);
 

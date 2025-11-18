@@ -2,6 +2,7 @@
 #include "ui_joindialog.h"
 #include "datamanager.h"
 #include <QMessageBox>
+#include <QSettings>
 
 JoinDialog::JoinDialog(QWidget *parent)
     : QDialog(parent)

@@ -50,7 +50,7 @@ void SettingsPage::loadUserInfo()
         ui->lineEditUsername->setText(userInfo["username"].toString());
         ui->lineEditName->setText(userInfo["name"].toString());
         ui->lineEditEmail->setText(userInfo["email"].toString());
-        ui->lineEditDateOfBirth->setText(userInfo["date_of_birth"].toString());
+        ui->lineEditDateOfBirth->setText(userInfo["dateOfBirth"].toString());
         ui->lineEditAddress->setText(userInfo["address"].toString());
     }
 }
