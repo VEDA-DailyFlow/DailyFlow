@@ -18,20 +18,20 @@ CustomCalendar::CustomCalendar(QWidget *parent)
     QTextCharFormat headerFormat;
     headerFormat.setForeground(QBrush(QColor("#333333")));
     headerFormat.setFontWeight(QFont::Bold);
-    headerFormat.setFontPointSize(12);
+    headerFormat.setFontPointSize(10);  // 12 → 10
     setHeaderTextFormat(headerFormat);
 
     QTextCharFormat weekendFormat;
     weekendFormat.setForeground(QBrush(QColor("#f44336")));
     weekendFormat.setFontWeight(QFont::Bold);
-    weekendFormat.setFontPointSize(12);
+    weekendFormat.setFontPointSize(10);  // 12 → 10
     setWeekdayTextFormat(Qt::Saturday, weekendFormat);
     setWeekdayTextFormat(Qt::Sunday, weekendFormat);
 
     QTextCharFormat weekdayFormat;
     weekdayFormat.setForeground(QBrush(QColor("#333333")));
     weekdayFormat.setFontWeight(QFont::Bold);
-    weekdayFormat.setFontPointSize(12);
+    weekdayFormat.setFontPointSize(10);  // 12 → 10
     setWeekdayTextFormat(Qt::Monday, weekdayFormat);
     setWeekdayTextFormat(Qt::Tuesday, weekdayFormat);
     setWeekdayTextFormat(Qt::Wednesday, weekdayFormat);
@@ -43,11 +43,11 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "   background-color: white; "
         "}"
         "QCalendarWidget QToolButton {"
-        "   height: 35px;"
-        "   width: 70px;"
+        "   height: 30px;"      // 35 → 30
+        "   width: 60px;"       // 70 → 60
         "   color: #2196F3;"
-        "   font-size: 13px;"
-        "   icon-size: 18px;"
+        "   font-size: 12px;"   // 13 → 12
+        "   icon-size: 16px;"   // 18 → 16
         "   background-color: white;"
         "   border: none;"
         "   border-radius: 4px;"
@@ -68,7 +68,7 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "   border: 1px solid #ddd;"
         "   border-radius: 4px;"
         "   padding: 4px;"
-        "   font-size: 13px;"
+        "   font-size: 12px;"   // 13 → 12
         "}"
         "QCalendarWidget QTableView {"
         "   background-color: white;"
@@ -77,7 +77,7 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "   border: none;"
         "   outline: none;"
         "   gridline-color: transparent;"
-        "   font-size: 13px;"
+        "   font-size: 12px;"   // 13 → 12
         "   font-weight: bold;"
         "}"
         "QCalendarWidget QAbstractItemView:enabled {"
@@ -85,7 +85,7 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "   background-color: white;"
         "   selection-background-color: #2196F3;"
         "   selection-color: white;"
-        "   font-size: 13px;"
+        "   font-size: 12px;"   // 13 → 12
         "   font-weight: bold;"
         "}"
         "QCalendarWidget QAbstractItemView:disabled {"
@@ -96,12 +96,11 @@ CustomCalendar::CustomCalendar(QWidget *parent)
         "}"
         );
 
-    setFixedSize(560, 360);
+    setFixedSize(480, 300);  // 560x360 → 480x300
 
     connect(this, &QCalendarWidget::currentPageChanged,
             this, &CustomCalendar::onPageChanged);
 }
-
 void CustomCalendar::setScheduleDates(const QMap<QDate, int> &scheduleCounts)
 {
     m_scheduleCounts = scheduleCounts;
@@ -153,7 +152,7 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
         painter->save();
         painter->setPen(QPen(QColor("#4CAF50"), 2));
         painter->setBrush(Qt::NoBrush);
-        painter->drawRoundedRect(rect.adjusted(4, 4, -4, -4), 4, 4);
+        painter->drawRoundedRect(rect.adjusted(3, 3, -3, -3), 3, 3);  // 4,4 → 3,3
         painter->restore();
     }
 
@@ -168,7 +167,7 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
 
     painter->setPen(textColor);
     QFont font = painter->font();
-    font.setPointSize(13);
+    font.setPointSize(11);  // 13 → 11
     font.setBold(true);
     painter->setFont(font);
     painter->drawText(rect, Qt::AlignCenter, QString::number(date.day()));
@@ -177,12 +176,12 @@ void CustomCalendar::paintCell(QPainter *painter, const QRect &rect, QDate date)
         painter->save();
 
         int scheduleCount = m_scheduleCounts[date];
-        int dotSize = 5;
+        int dotSize = 4;     // 5 → 4
         int spacing = 2;
         int dotsToShow = qMin(scheduleCount, 3);
         int totalWidth = dotsToShow * dotSize + (dotsToShow - 1) * spacing;
         int startX = rect.center().x() - totalWidth / 2;
-        int dotY = rect.bottom() - 10;
+        int dotY = rect.bottom() - 8;  // 10 → 8
 
         painter->setRenderHint(QPainter::Antialiasing);
 

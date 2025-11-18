@@ -44,7 +44,7 @@ QGroupBox::title {
 }</string>
      </property>
      <property name="title">
-      <string>🤖 AI 서비스</string>
+      <string>AI 서비스</string>
      </property>
      <layout class="QVBoxLayout" name="aiLayout">
       <item>
@@ -179,7 +179,7 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>🔄 새로고침</string>
+         <string>새로고침</string>
         </property>
        </widget>
       </item>
@@ -204,7 +204,7 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="title">
-        <string>📅 예정된 일정 (7일)</string>
+        <string>예정된 일정</string>
        </property>
        <layout class="QVBoxLayout" name="listLayout">
         <item>
@@ -245,7 +245,7 @@ QListWidget::item:hover {
 }</string>
        </property>
        <property name="title">
-        <string>📝 일정 상세</string>
+        <string>일정 상세</string>
        </property>
        <layout class="QVBoxLayout" name="detailLayout">
         <item>
