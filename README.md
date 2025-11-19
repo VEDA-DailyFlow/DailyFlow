@@ -4,7 +4,7 @@
 
 DailyFlow는 Qt C++로 개발된 데스크톱 일정 관리 프로그램으로, OpenAI API와 날씨 API를 활용하여 사용자 맞춤형 AI 일정 요약 및 운세 서비스를 제공합니다.
 
-<img src="./assets/홈페이지_오늘의_운세.png"/>
+<img src="./assets/홈페이지_AI일정요약.png"/>
 
 ---
 
@@ -196,7 +196,7 @@ WEATHER_API_KEY=your-openweathermap-api-key-here
 
 ### 1. 로그인 화면
 <img src="./assets/로그인창.png"/>
-<img src="./assets/로그인창.png"/>
+<img src="./assets/로그인창_아이디_패스워드_입력.png"/>
 
 - 아이디/비밀번호 입력
 - 회원가입 버튼
@@ -210,6 +210,7 @@ WEATHER_API_KEY=your-openweathermap-api-key-here
 ### 3. 홈 페이지 (AI 요약)
 <img src="./assets/홈페이지_AI일정요약.png"/>
 <img src="./assets/홈페이지_오늘의운세.png"/>
+<img src="./assets/다크모드_홈페이지.png"/>
 
 #### AI 일정 요약 탭
 ```
@@ -244,8 +245,8 @@ Kim JiOh님, 오늘은 다양한 일정이 있으니 미리 준비하시면 좋�
 ```
 
 ### 4. 일정 관리 페이지
-![일정 관리](./screenshots/schedule.png)
-<!-- 일정 관리 페이지 스크린샷 추가 -->
+<img src="./assets/일정페이지.png"/>
+<img src="./assets/다크모드_일정페이지.png"/>
 
 - 월간 캘린더 뷰 (커스텀 디자인)
 - 일정이 있는 날짜 점 표시 (최대 3개)
@@ -253,16 +254,20 @@ Kim JiOh님, 오늘은 다양한 일정이 있으니 미리 준비하시면 좋�
 - 일정 추가/수정/삭제 버튼
 
 ### 5. 일정 추가/수정 다이얼로그
-![일정 다이얼로그](./screenshots/schedule_dialog.png)
-<!-- 일정 다이얼로그 스크린샷 추가 -->
+<img src="./assets/일정추가창.png">
+<img src="./assets/일정추가창_카테고리.png">
+<img src="./assets/다크모드_일정수정창.png">
 
 - 제목, 날짜, 시간, 장소, 메모 입력
 - 카테고리 선택 (🏢 업무 / 👤 개인 / 📚 학습 / 🎯 기타)
 - 실시간 입력 유효성 검사
 
 ### 6. 설정 페이지
-![설정 페이지](./screenshots/settings.png)
-<!-- 설정 페이지 스크린샷 추가 -->
+<img src="./assets/설정페이지.png"/>
+<img src="./assets/설정페이지_회원정보수정.png"/>
+<img src="./assets/설정페이지_비밀번호변경_현재비밀번호.png"/>
+<img src="./assets/설정페이지_회원탈퇴.png"/>
+<img src="./assets/다크모드_설정페이지.png"/>
 
 - 회원정보 조회/수정
 - 비밀번호 변경
@@ -412,7 +417,7 @@ bool DataManager::verifyPassword(const QString& password, const QString& storedH
 
 ---
 
-## 🧪 개발 및 테스트
+## 개발 및 테스트
 
 ### 개발 환경
 
@@ -451,7 +456,7 @@ bool DataManager::verifyPassword(const QString& password, const QString& storedH
 
 ---
 
-## 📈 성능 최적화
+## 성능 최적화
 
 ### 1. 데이터베이스 인덱싱
 
@@ -536,7 +541,7 @@ void CustomCalendar::updateVisibleRows()
 
 ## 라이선스
 
-이 프로젝트는 교육 목적으로 제작되었습니다.
+이 프로젝트는 학습 목적으로 제작되었습니다.
 
 - **Qt Framework**: [LGPL v3](https://www.qt.io/licensing/)
 - **OpenAI API**: [OpenAI Terms of Use](https://openai.com/policies/terms-of-use)
