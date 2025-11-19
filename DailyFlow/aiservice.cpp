@@ -147,7 +147,8 @@ QString AIService::generateTodaysFortune(int userId){
                          "오늘 날짜: %2\n"
                          "생년월일: %3 (만 %4세)\n\n"
                          "다음 형식으로 오늘의 운세를 작성해주세요:\n\n"
-                         "🔮 %1님의 오늘의 운세\n\n"
+                         "🔮 %2 %1님의 운세\n"
+                         "생년월일: %3 (만 %4세)\n\n"
                          "전체운: [전체운 내용 - 2-3문장, 긍정적이면서도 현실적인 조언]\n\n"
                          "금전운: [금전운 내용 - 1-2문장]\n\n"
                          "연애운: [연애운 내용 - 1-2문장]\n\n"
@@ -161,19 +162,21 @@ QString AIService::generateTodaysFortune(int userId){
 
     if(fortune.isEmpty()) {
         fortune = QString(
-                      "🔮 %1님의 오늘의 운세\n\n"
+                      "🔮 %2 %1님의 운세\n"
+                      "생년월일: %3 (만 %4세)\n\n"
                       "전체운: 오늘은 평온한 하루가 될 것입니다. 계획한 일들을 차근차근 진행해보세요.\n\n"
                       "금전운: 안정적인 흐름입니다. 충동적인 지출만 조심하세요.\n\n"
                       "연애운: 솔직한 대화가 좋은 결과를 가져옵니다.\n\n"
                       "건강운: 컨디션 관리에 신경 쓰는 것이 좋습니다.\n\n"
                       "💡 오늘의 조언: 작은 것부터 차근차근 실천하세요!"
-                      ).arg(userName);
+                      ).arg(userName, todayKorean, userBirth, QString::number(age));
     }
 
     return fortune;
 }
 
 QString AIService::parseLocationFromAddress(const QString &address){
+    qDebug() << "address: " << address;
     if(address.isEmpty()) {
         return "Seoul";
     }
