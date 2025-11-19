@@ -175,7 +175,7 @@ QString AIService::generateTodaysFortune(int userId){
 
 QString AIService::parseLocationFromAddress(const QString &address){
     if(address.isEmpty()) {
-        return QString();
+        return "Seoul";
     }
 
     // 주소 파싱 로직
@@ -184,7 +184,7 @@ QString AIService::parseLocationFromAddress(const QString &address){
 
     QStringList parts = address.split(" ");
     if(parts.isEmpty()) {
-        return QString();
+        return "Seoul";
     }
 
     QString firstPart = parts[0];
@@ -198,20 +198,6 @@ QString AIService::parseLocationFromAddress(const QString &address){
     if(firstPart.contains("광주")) return "Gwangju";
     if(firstPart.contains("울산")) return "Ulsan";
     if(firstPart.contains("세종")) return "Sejong";
-
-    // 경기도의 경우 시/군 정보 사용
-    if(firstPart.contains("경기") && parts.size() > 1) {
-        QString city = parts[1];
-        city.remove("시").remove("군");
-        return city;
-    }
-
-    // 기타 도의 경우
-    if(parts.size() > 1) {
-        QString city = parts[1];
-        city.remove("시").remove("군");
-        return city;
-    }
 
     return "Seoul";  // 기본값
 }
