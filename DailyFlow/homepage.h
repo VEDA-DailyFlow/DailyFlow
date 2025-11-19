@@ -2,6 +2,8 @@
 #define HOMEPAGE_H
 
 #include <QWidget>
+#include <QListWidgetItem>
+#include <QMap>
 
 namespace Ui {
 class HomePage;
@@ -12,15 +14,28 @@ class HomePage : public QWidget
     Q_OBJECT
 
 public:
-    explicit HomePage(const QString &userId, QWidget *parent = nullptr);
+    explicit HomePage(int userId, QWidget *parent = nullptr);
     ~HomePage();
 
-private:
-    void loadAISummary();
-    void loadUpcomingSchedules();
+public slots:
+    void refreshSchedules();
+    void applyTheme(bool isDarkMode);
 
+private slots:
+    void onScheduleItemClicked(QListWidgetItem *item);
+    void onEditButtonClicked();
+    void onDeleteButtonClicked();
+    void onRefreshButtonClicked();    // 통합 새로고침 버튼
+
+private:
     Ui::HomePage *ui;
-    QString m_userId;
+    int m_userId;
+    QMap<QListWidgetItem*, int> m_itemToScheduleId;
+
+    void loadAISummary();
+    void loadFortune();
+    void loadUpcomingSchedules();
+    void displayScheduleDetail(int scheduleId);
 };
 
 #endif // HOMEPAGE_H

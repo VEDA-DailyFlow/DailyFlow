@@ -28,9 +28,6 @@
    </property>
    <item>
     <widget class="QGroupBox" name="calendarBox">
-     <property name="title">
-      <string>📅 캘린더</string>
-     </property>
      <property name="styleSheet">
       <string>QGroupBox {
    font-size: 16px;
@@ -47,6 +44,9 @@ QGroupBox::title {
    left: 15px;
    padding: 0 5px;
 }</string>
+     </property>
+     <property name="title">
+      <string>달력</string>
      </property>
      <layout class="QVBoxLayout" name="calendarBoxLayout">
       <property name="spacing">
@@ -75,7 +75,7 @@ QGroupBox::title {
         <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -87,34 +87,34 @@ QGroupBox::title {
         </item>
         <item>
          <widget class="QLabel" name="legendLabel">
-          <property name="text">
-           <string>● 일정 있음</string>
-          </property>
           <property name="styleSheet">
            <string>color: #2196F3; 
 font-size: 13px; 
 font-weight: normal; 
 padding: 5px 10px;</string>
           </property>
+          <property name="text">
+           <string>● 일정 있음</string>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="todayLabel">
-          <property name="text">
-           <string>● 오늘</string>
-          </property>
           <property name="styleSheet">
            <string>color: #4CAF50; 
 font-size: 13px; 
 font-weight: normal; 
 padding: 5px 10px;</string>
           </property>
+          <property name="text">
+           <string>● 오늘</string>
+          </property>
          </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer_4">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -128,12 +128,6 @@ padding: 5px 10px;</string>
       </item>
       <item>
        <widget class="QScrollArea" name="scrollArea">
-        <property name="widgetResizable">
-         <bool>false</bool>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
         <property name="styleSheet">
          <string>QScrollArea {
    border: none;
@@ -172,6 +166,12 @@ QScrollBar::add-line, QScrollBar::sub-line {
    background: none;
 }</string>
         </property>
+        <property name="widgetResizable">
+         <bool>false</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
        </widget>
       </item>
      </layout>
@@ -179,9 +179,6 @@ QScrollBar::add-line, QScrollBar::sub-line {
    </item>
    <item>
     <widget class="QGroupBox" name="scheduleBox">
-     <property name="title">
-      <string/>
-     </property>
      <property name="styleSheet">
       <string>QGroupBox {
    border: 2px solid #e0e0e0;
@@ -190,6 +187,9 @@ QScrollBar::add-line, QScrollBar::sub-line {
    padding-top: 10px;
    background-color: white;
 }</string>
+     </property>
+     <property name="title">
+      <string/>
      </property>
      <layout class="QVBoxLayout" name="scheduleLayout">
       <property name="spacing">
@@ -209,9 +209,6 @@ QScrollBar::add-line, QScrollBar::sub-line {
       </property>
       <item>
        <widget class="QLabel" name="dateLabel">
-        <property name="text">
-         <string>📆 날짜</string>
-        </property>
         <property name="styleSheet">
          <string>font-size: 16px; 
 font-weight: bold; 
@@ -219,6 +216,9 @@ color: #2196F3;
 padding: 8px; 
 background-color: #e3f2fd; 
 border-radius: 4px;</string>
+        </property>
+        <property name="text">
+         <string>일별 일정</string>
         </property>
        </widget>
       </item>
@@ -256,9 +256,6 @@ QListWidget::item:hover {
         </property>
         <item>
          <widget class="QPushButton" name="addButton">
-          <property name="text">
-           <string>➕ 일정 추가</string>
-          </property>
           <property name="styleSheet">
            <string>QPushButton {
    background-color: #2196F3;
@@ -276,15 +273,15 @@ QPushButton:pressed {
    background-color: #1565C0;
 }</string>
           </property>
+          <property name="text">
+           <string>일정 추가</string>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="editButton">
           <property name="enabled">
            <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>✏️ 수정</string>
           </property>
           <property name="styleSheet">
            <string>QPushButton {
@@ -306,15 +303,15 @@ QPushButton:disabled {
    color: #888;
 }</string>
           </property>
+          <property name="text">
+           <string>수정</string>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="deleteButton">
           <property name="enabled">
            <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>🗑️ 삭제</string>
           </property>
           <property name="styleSheet">
            <string>QPushButton {
@@ -336,12 +333,15 @@ QPushButton:disabled {
    color: #888;
 }</string>
           </property>
+          <property name="text">
+           <string>삭제</string>
+          </property>
          </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>

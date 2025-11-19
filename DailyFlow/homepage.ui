@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>871</width>
     <height>600</height>
    </rect>
   </property>
@@ -28,9 +28,6 @@
    </property>
    <item>
     <widget class="QGroupBox" name="aiSummaryBox">
-     <property name="title">
-      <string>📌 AI 오늘 일정 요약</string>
-     </property>
      <property name="styleSheet">
       <string>QGroupBox {
    font-size: 16px;
@@ -46,32 +43,143 @@ QGroupBox::title {
    padding: 0 5px;
 }</string>
      </property>
+     <property name="title">
+      <string>AI 서비스</string>
+     </property>
      <layout class="QVBoxLayout" name="aiLayout">
       <item>
-       <widget class="QTextEdit" name="aiSummaryText">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="styleSheet">
-         <string>QTextEdit {
+       <layout class="QHBoxLayout" name="tabHeaderLayout">
+        <item>
+         <widget class="QTabWidget" name="aiTabWidget">
+          <property name="styleSheet">
+           <string>QTabWidget::pane {
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   background-color: #f0f8ff;
+}
+QTabBar::tab {
+   background-color: #e0e0e0;
+   padding: 8px 20px;
+   margin-right: 2px;
+   border-top-left-radius: 4px;
+   border-top-right-radius: 4px;
+}
+QTabBar::tab:selected {
+   background-color: #2196F3;
+   color: white;
+   font-weight: bold;
+}
+QTabBar::tab:hover {
+   background-color: #64B5F6;
+   color: white;
+}</string>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="scheduleSummaryTab">
+           <attribute name="title">
+            <string>📌 AI 오늘 일정 요약</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="summaryTabLayout">
+            <item>
+             <widget class="QTextEdit" name="aiSummaryText">
+              <property name="styleSheet">
+               <string>QTextEdit {
    background-color: #f0f8ff;
    border: 1px solid #ddd;
    border-radius: 4px;
    padding: 10px;
    font-size: 13px;
 }</string>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="html">
+               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'맑은 고딕'; font-size:13px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AI 일정 요약을 불러오는 중...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="fortuneTab">
+           <attribute name="title">
+            <string>🔮 오늘의 운세</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="fortuneTabLayout">
+            <item>
+             <widget class="QTextEdit" name="fortuneText">
+              <property name="styleSheet">
+               <string>QTextEdit {
+   background-color: #f3e5f5;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   padding: 10px;
+   font-size: 13px;
+}</string>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="html">
+               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'맑은 고딕'; font-size:13px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;오늘의 운세를 불러오는 중...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="refreshButton">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;/head&gt;&lt;body&gt;
-&lt;p&gt;AI 요약을 불러오는 중...&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</string>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string>QPushButton {
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   padding: 8px 16px;
+   border-radius: 4px;
+   font-weight: bold;
+   font-size: 13px;
+}
+QPushButton:hover {
+   background-color: #45a049;
+}
+QPushButton:pressed {
+   background-color: #3d8b40;
+}</string>
+        </property>
+        <property name="text">
+         <string>새로고침</string>
         </property>
        </widget>
       </item>
@@ -85,9 +193,6 @@ QGroupBox::title {
      </property>
      <item>
       <widget class="QGroupBox" name="scheduleListBox">
-       <property name="title">
-        <string>📅 예정된 일정 (7일)</string>
-       </property>
        <property name="styleSheet">
         <string>QGroupBox {
    font-size: 14px;
@@ -97,6 +202,9 @@ QGroupBox::title {
    margin-top: 10px;
    padding-top: 10px;
 }</string>
+       </property>
+       <property name="title">
+        <string>예정된 일정</string>
        </property>
        <layout class="QVBoxLayout" name="listLayout">
         <item>
@@ -126,9 +234,6 @@ QListWidget::item:hover {
      </item>
      <item>
       <widget class="QGroupBox" name="detailBox">
-       <property name="title">
-        <string>📝 일정 상세</string>
-       </property>
        <property name="styleSheet">
         <string>QGroupBox {
    font-size: 14px;
@@ -139,12 +244,12 @@ QListWidget::item:hover {
    padding-top: 10px;
 }</string>
        </property>
+       <property name="title">
+        <string>일정 상세</string>
+       </property>
        <layout class="QVBoxLayout" name="detailLayout">
         <item>
          <widget class="QTextEdit" name="scheduleDetail">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
           <property name="styleSheet">
            <string>QTextEdit {
    border: 1px solid #ddd;
@@ -154,11 +259,18 @@ QListWidget::item:hover {
    font-size: 13px;
 }</string>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;/head&gt;&lt;body&gt;
-&lt;p&gt;일정을 선택하세요.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</string>
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'맑은 고딕'; font-size:13px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;일정을 선택하세요.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -171,9 +283,6 @@ QListWidget::item:hover {
            <widget class="QPushButton" name="editButton">
             <property name="enabled">
              <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>수정</string>
             </property>
             <property name="styleSheet">
              <string>QPushButton {
@@ -191,15 +300,15 @@ QPushButton:disabled {
    background-color: #cccccc;
 }</string>
             </property>
+            <property name="text">
+             <string>수정</string>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="deleteButton">
             <property name="enabled">
              <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>삭제</string>
             </property>
             <property name="styleSheet">
              <string>QPushButton {
@@ -217,12 +326,15 @@ QPushButton:disabled {
    background-color: #cccccc;
 }</string>
             </property>
+            <property name="text">
+             <string>삭제</string>
+            </property>
            </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
