@@ -18,10 +18,14 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        logo.rc
+        resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(DailyFlow
+
+
+qt_add_executable(DailyFlow
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         logindialog.h logindialog.cpp logindialog.ui
@@ -36,6 +40,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         aiservice.h aiservice.cpp
         envloader.h envloader.cpp
         scheduledialog.h scheduledialog.cpp scheduledialog.ui
+
 
     )
 # Define target properties for Android with Qt 6 as:

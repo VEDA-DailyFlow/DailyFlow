@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    if(!EnvLoader::load("C:/Users/2-15/Desktop/project/DailyFlow/DailyFlow/.env")){
+    if(!EnvLoader::load(".env")){
         qWarning() << ".env file not found or invalid!";
     }
 
@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 
     bool restartLoop = true; // 로그아웃 시 루프를 다시 시작하기 위한 플래그
 
+    a.setWindowIcon(QIcon(":/logo.png"));  // 프로그램 실행 아이콘
     while (restartLoop)
     {
         LoginDialog loginDialog;
