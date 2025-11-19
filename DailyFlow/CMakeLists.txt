@@ -18,7 +18,7 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        logo.rc
+        # logo.rc
         resources.qrc
 )
 

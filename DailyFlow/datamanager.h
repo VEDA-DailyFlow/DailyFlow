@@ -7,6 +7,7 @@
 #include <QList>
 #include <QVariantMap>
 
+// 기본적인 DB 생성과 프로그램의 기능 수행을 위해 DB에 접속해야하는 함수들의 모음
 class DataManager : public QWidget
 {
     Q_OBJECT
@@ -14,15 +15,22 @@ public:
     static DataManager& instance();
 
     // ============================================================================
-    // 유저 정보
+    // 사용자 관리
     // ============================================================================
+
+    // 로그인
+    int loginUser(const QString& username, const QString& password);
+
+    // 회원 가입
     bool addUser(const QString &username,
                  const QString &password,
                  const QString &name,
                  const QString &email,
                  const QString &dateOfBirth,
                  const QString &address);
-    int loginUser(const QString& username, const QString& password);
+    bool userExists(const QString& username);  // 아이디 중복 확인
+
+    // 회원 정보 수정
     bool updateUser(int userId,
                     const QString& name,
                     const QString& email,
@@ -32,43 +40,41 @@ public:
                     const QString& oldPassword,
                     const QString& newPassword);
     bool deleteUser(int userId);
-    bool userExists(const QString& username);
+
+    // 회원 정보 조회
     QVariantMap getUserInfo(int userId);
 
     // ============================================================================
-    // 스케줄 정보
+    // 일정 관리
     // ============================================================================
+
+    // 일정 추가
     bool addSchedule(int userId, const QString& title, const QString& date,
                      const QString& startTime, const QString& endTime,
                      const QString& location, const QString& memo,
                      const QString& category);
 
     // 일정 조회
-    QList<QVariantMap> getSchedulesByDate(int userId, const QString& date);
-    QList<QVariantMap> getSchedulesByMonth(int userId, int year, int month);
-    QList<QVariantMap> getAllSchedules(int userId);
-    QVariantMap getScheduleById(int scheduleId);
+    QList<QVariantMap> getSchedulesByDate(int userId, const QString& date);   // 해당 날짜의 일정 목록
+    QList<QVariantMap> getSchedulesByMonth(int userId, int year, int month);  // 해당 월의 전체 일정 목록 (일정페이지의 캘린더 표시용)
+    QList<QVariantMap> getSchedulesForNextDays(int userId, int days = 7);     // 오늘부터 N일간의 일정 (홈페이지용)
+    QList<QVariantMap> getAllSchedules(int userId);  // userID가 가진 모든 일정을 가져옴 (현재 사용처 없음)
+    QVariantMap getScheduleById(int scheduleId);  // 각 일정은 고유 scheduleID를 가지며 그 일정의 모든 상세 정보를 가져옴
+    QList<QVariantMap> searchSchedules(int userId, const QString& keyword);  // 검색(제목, 장소, 메모 내용 중)하여 '키워드'가 포함된 일정을 가져옴 (현재 사용처 없음)
+    QList<QVariantMap> getSchedulesByCategory(int userId, const QString& category);  // 카테고리에 해당하는 일정만 필터링해서 가져옴 (현재 사용처 없음)
 
-    // 일정 수정
+    // 일정 수정 - onEditButtonClicked() 함수의 callee
     bool updateSchedule(int scheduleId, const QString& title, const QString& date,
                         const QString& startTime, const QString& endTime,
                         const QString& location, const QString& memo,
                         const QString& category);
 
-    // 일정 삭제
+    // 일정 삭제 - onDeleteButtonClicked 함수의 callee
     bool deleteSchedule(int scheduleId);
-    bool deleteSchedulesByDate(int userId, const QString& date);
-
-    // 일정 검색
-    QList<QVariantMap> searchSchedules(int userId, const QString& keyword);
-
-    // 카테고리별 일정 조회
-    QList<QVariantMap> getSchedulesByCategory(int userId, const QString& category);
-    // 오늘부터 일정기간 동안의 일정 조회
-    QList<QVariantMap> getSchedulesForNextDays(int userId, int days = 7);
+    bool deleteSchedulesByDate(int userId, const QString& date);  // 현재 날짜에 있는 모든 일정을 한방에 삭제 (현재 사용처 없음)
 
     // ============================================================================
-    // AI 유저
+    // AI 요약 관리
     // ============================================================================
     // 요약 있으면 가져오고 없으면 생성
     QString getOrCreateDailySummary(int userId, const QString& date);
