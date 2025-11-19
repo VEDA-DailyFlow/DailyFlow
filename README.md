@@ -524,12 +524,14 @@ void CustomCalendar::updateVisibleRows()
 ## 개발팀
 
 ### 프로젝트 리더 & 백엔드
+**엄도윤**
 - **역할**: 
   - 데이터베이스 설계 및 구현
   - AI API 연동 (OpenAI, OpenWeatherMap)
   - 회원 관리 시스템
   - 환경 변수 관리
 
+**김지오**
 ### UI/UX 디자이너 & 프론트엔드
 - **역할**: 
   - 커스텀 캘린더 위젯 개발
